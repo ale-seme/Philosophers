@@ -10,35 +10,58 @@ pthread_mutex_destroy, pthread_mutex_lock,
 pthread_mutex_unlock*/
 
 
-void *routine1(void *arg)
+// void *routine1(void *arg)
+// {
+// 	printf("value of x in t1: %d\n", *(int *)arg);
+// 	return (NULL);
+// }
+typedef struct lock_s
 {
-	printf("value of x in t1: %d\n", *(int *)arg);
-	return (NULL);
-}
+	pthread_mutex_t m1;
+	int				x;
+}	lock_t;
 
-void *routine2(void *arg)
+void *routine2(void *elements)
 {
-	sleep(2);
-	*(int *)arg += 1;
-	printf("vale of x in t2: %d\n", *(int *)arg);
+	
+	lock_t *elements_new = (lock_t *)(elements);
+
+	pthread_mutex_lock(&elements_new->m1);
+	for(int x = 1; x <= 1000000; x++)
+	{
+		(elements_new->x) += 1;
+	}
+	printf("vale of x in t2: %d\n", elements_new->x);
+	pthread_mutex_unlock(&elements_new->m1);
 	return (NULL);
 }
 
 int main(int argc, char **argv)
 {
-	pthread_t t1, t2;
+	pthread_t t[10];
+	
+	lock_t elements;
+	int 	i;
+
+	i = 0;
+	elements.x = 0;
 	(void)argv;
 	(void)argc;
-	int x = 2;
 
-
-	if (pthread_create(&t1, NULL, &routine1, &x) != 0)
-		return (1);
-	if (pthread_create(&t2, NULL, &routine2, &x) != 0)
-		return (2);
-	if (pthread_join(t1, NULL) != 0)
+	pthread_mutex_init(&elements.m1, NULL);
+	while (i < 10)
+	{
+		if (pthread_create(&t[i], NULL, &routine2, &elements) != 0)
+			return (1);
+		i++;
+	}
+	i = 0;
+	while(i < 10)
+	{
+		if (pthread_join(t[i], NULL) != 0)
 		return (3);
-	if (pthread_join(t2, NULL) != 0)
-		return (4);
+		i++;
+	}
+	pthread_mutex_destroy(&elements.m1);
 	return (0);
 }
