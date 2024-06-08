@@ -33,36 +33,47 @@ typedef struct s_philo
 
 }	t_philo;
 
+void *routine(void *data)
+{
+	t_program *new_data;
+	
+	new_data = (t_program *)(data);
+	if ()
+
+}
 
 int main(int argc, char **argv)
 {
-	t_program 			p_data = {};
+	if (argc == 1)
+	{
+		printf("no arguments given\n");
+		return (1);
+	}
+	t_program 			p_data;
 	t_philo				philosophers[3];
 	pthread_t			th_array[3];
-	// t_fork				forks[3];
 
 	p_data.n_filos = atoi(argv[1]);
 	p_data.time_to_die = atoi(argv[2]);
 	p_data.time_to_eat = atoi(argv[3]);
 	p_data.time_to_sleep = atoi(argv[4]);
-	p_data.th_array = th_array;
+	//p_data.th_array = th_array;
 	// p_data.forks = forks;
 
-	printf("this is number of philos %d\n", p_data.n_filos);
-	printf("this is number of philos %d\n", p_data.time_to_eat);
-	printf("this is number of philos %d\n", p_data.time_to_die);
-	printf("this is number of philos %d\n", p_data.time_to_sleep);
-
-
-	int i = 1;
-	while(i < 4)
+	int i = 0;
+	while(i < 3)
 	{
-		philosophers[i].f_id = i;
-		philosophers[i].fork_left.fork_id = i;
-		philosophers[i].thread = p_data.th_array[i];
-		// philosophers[i]
-		printf("this is philo n: %zu\n and this is left fork id \
-			%d\n", philosophers[i].f_id, philosophers[i].fork_left.fork_id);
+		philosophers[i].f_id = i + 1;
+		philosophers[i].fork_left.fork_id = i + 1;
+		philosophers[i].fork_right.fork_id = philosophers[i].fork_left.fork_id -1;
+		if (philosophers[i].fork_right.fork_id == 0)
+			philosophers[i].fork_right.fork_id = p_data.n_filos;
+
+		pthread_mutex_init(&philosophers[i].fork_left.lock, NULL);
+		pthread_mutex_init(&philosophers[i].fork_right.lock, NULL);
+		pthread_create(&philosophers[i].thread, NULL, &routine, &p_data);
+		printf("philo n: %zu left fork id:%d and right_fork id: %d\n"\
+			, philosophers[i].f_id, philosophers[i].fork_left.fork_id, philosophers[i].fork_right.fork_id);
 		i++;
 	}
 
