@@ -2,6 +2,8 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "pthread.h"
+#include <time.h>
+#include <sys/time.h>
 
 /*memset, printf, malloc, free, write,
 usleep, gettimeofday, pthread_create,
@@ -19,6 +21,7 @@ typedef struct lock_s
 {
 	pthread_mutex_t m1;
 	int				x;
+	struct timeval	tv;
 }	lock_t;
 
 void *routine2(void *elements)
@@ -32,8 +35,10 @@ void *routine2(void *elements)
 		(elements_new->x) += 1;
 	}
 	printf("vale of x in t2: %d\n", elements_new->x);
-	pthread_mutex_unlock(&elements_new->m1);
-	return (NULL);
+	gettimeofday(&elements_new->tv, NULL);
+	printf("thread is telling me the time %ld\n", (elements_new->tv.tv_sec*1000) + (elements_new->tv.tv_usec/1000));
+	//pthread_mutex_unlock(&elements_new->m1);
+	return (pthread_mutex_unlock(&elements_new->m1), NULL);
 }
 
 int main(int argc, char **argv)
@@ -41,6 +46,8 @@ int main(int argc, char **argv)
 	pthread_t t[10];
 	
 	lock_t elements;
+	
+	
 	int 	i;
 
 	i = 0;
