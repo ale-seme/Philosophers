@@ -13,7 +13,7 @@ typedef struct s_program
 	int				time_to_sleep;
 	pthread_t		*th_array;
 	pthread_mutex_t	*forks;
-	
+
 
 }	t_program;
 
@@ -27,7 +27,7 @@ typedef struct s_philo
 {
 	
 	size_t			f_id;
-	size_t			start_time;
+	struct timeval	tv;
 	pthread_t		thread;
 	t_fork			fork_right;
 	t_fork			fork_left;
@@ -36,12 +36,16 @@ typedef struct s_philo
 
 }	t_philo;
 
-void *routine(void *data)
+void *routine(void *philos)
 {
-	t_program *new_data;
+	t_philo *new_philos;
 	
-	new_data = (t_program *)(data);
+	new_philos = (t_philo *)(philos);
 
+	if (new_philos->fork_left.fork_id)
+	//pthread_mutex_lock(&new_philos->fork_left.lock);
+	printf("philo n %ld: has taken the left fork\n", new_philos->f_id);
+	//pthread_mutex_unlock(&new_philos->fork_left.lock);
 
 	return NULL;
 
@@ -49,9 +53,9 @@ void *routine(void *data)
 
 int main(int argc, char **argv)
 {
-	if (argc == 1)
+	if (argc != 5)
 	{
-		printf("no arguments given\n");
+		printf("not right amout of argument given\n");
 		return (1);
 	}
 	t_program 			p_data;
@@ -79,7 +83,7 @@ int main(int argc, char **argv)
 			philosophers[i].fork_right.fork_id = p_data.n_filos;
 		pthread_mutex_init(&philosophers[i].fork_left.lock, NULL);
 		pthread_mutex_init(&philosophers[i].fork_right.lock, NULL);
-		pthread_create(&philosophers[i].thread, NULL, &routine, &p_data);
+		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers);
 		printf("philo n: %zu left fork id:%d and right_fork id: %d\n"\
 			, philosophers[i].f_id, philosophers[i].fork_left.fork_id, philosophers[i].fork_right.fork_id);
 		i++;

@@ -35,10 +35,11 @@ void *routine2(void *elements)
 		(elements_new->x) += 1;
 	}
 	printf("vale of x in t2: %d\n", elements_new->x);
+	pthread_mutex_unlock(&elements_new->m1);
+	//return (pthread_mutex_unlock(&elements_new->m1), NULL);
 	gettimeofday(&elements_new->tv, NULL);
 	printf("thread is telling me the time %ld\n", (elements_new->tv.tv_sec*1000) + (elements_new->tv.tv_usec/1000));
-	//pthread_mutex_unlock(&elements_new->m1);
-	return (pthread_mutex_unlock(&elements_new->m1), NULL);
+	return (NULL);
 }
 
 int main(int argc, char **argv)
