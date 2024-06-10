@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <stdbool.h>
 #include <time.h>
 #include <sys/time.h>
 
@@ -11,15 +12,14 @@ typedef struct s_program
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	pthread_t		*th_array;
+	int				is_dead;
 	pthread_mutex_t	*forks;
-
-
 }	t_program;
 
 typedef struct s_fork
 {
 	pthread_mutex_t lock;
+	bool			is_taken;
 	int				fork_id;
 }	t_fork;
 
@@ -42,9 +42,24 @@ typedef struct s_philo
 	
 // 	new_philos = (t_philo *)(philos);
 
-// 	if (new_philos->fork_left.fork_id)
-// 	//pthread_mutex_lock(&new_philos->fork_left.lock);
-// 	printf("philo n %ld: has taken the left fork\n", new_philos->f_id);
+// 	printf("new_philo\nf_id: %lu\ntv: %p\nthread: %p\nfork_right: %p\nfork_left: %p\ndata: %p\n", new_philos->f_id, &new_philos->tv, &new_philos->thread, new_philos->fork_right, new_philos->fork_left, new_philos->data);
+// 	pthread_mutex_lock(&new_philos->fork_left->lock);
+// 	pthread_mutex_lock(&new_philos->fork_right->lock);
+// 	if (new_philos->fork_left->is_taken || new_philos->fork_right->is_taken)
+// 	{
+// 		pthread_mutex_unlock(&new_philos->fork_left->lock);
+// 		pthread_mutex_unlock(&new_philos->fork_right->lock);
+// 		// think for x amount of time
+// 	}
+// 	else
+// 	{
+// 		new_philos->fork_left->is_taken = true;
+// 		new_philos->fork_right->is_taken = true;
+// 		pthread_mutex_unlock(&new_philos->fork_left->lock);
+// 		pthread_mutex_unlock(&new_philos->fork_right->lock);
+// 		// eat for x amount of time, then 
+// 		printf("philo n %ld: has taken the left fork\n", new_philos->f_id);
+// 	}
 // 	//pthread_mutex_unlock(&new_philos->fork_left.lock);
 
 // 	return NULL;
@@ -63,13 +78,21 @@ int main(int argc, char **argv)
 	t_fork				*forks;
 	int					i;
 
-	philosophers = malloc(sizeof(t_philo) *p_data.n_filos);
-	forks = malloc(sizeof(t_fork) *p_data.n_filos);
 	p_data.n_filos = atoi(argv[1]);
 	p_data.time_to_die = atoi(argv[2]);
 	p_data.time_to_eat = atoi(argv[3]);
 	p_data.time_to_sleep = atoi(argv[4]);
+	philosophers = malloc(sizeof(t_philo) *p_data.n_filos);
+	forks = malloc(sizeof(t_fork) *p_data.n_filos);
 
+	i = 0;
+	while(i < p_data.n_filos)
+	{
+		forks[i].fork_id = i + 1;
+		pthread_mutex_init(&forks[i].lock, NULL);
+		forks[i].is_taken = false;
+		i++;
+	}
 	i = 0;
 	while(i < p_data.n_filos)
 	{
@@ -80,38 +103,26 @@ int main(int argc, char **argv)
 			philosophers[i].fork_right = &forks[p_data.n_filos - 1];
 		else
 			philosophers[i].fork_right = &forks[i - 1];
-
-		// philosophers[i].fork_left.fork_id = i + 1;
-		// philosophers[i].fork_right.fork_id = philosophers[i].fork_left.fork_id -1;
-		// if (philosophers[i].fork_right.fork_id == 0)
-		// 	philosophers[i].fork_right.fork_id = p_data.n_filos;
-		// pthread_mutex_init(&philosophers[i].fork_left.lock, NULL);
-		// pthread_mutex_init(&philosophers[i].fork_right.lock, NULL);
-		// pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers);
+		//pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers);
 		printf("philo n: %zu\n", philosophers[i].f_id);
 		i++;
 	}
 	i = 0;
-	while(i < p_data.n_filos)
+	while (i < p_data.n_filos)
 	{
-		forks[i].fork_id = i + 1;
+		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers);
 		i++;
 	}
 	int x = 0;
 	while(x < p_data.n_filos)
 	{
-		printf("philo n: %zu, and his fork left_id: %p, and his fork right_id: d\n", philosophers[x].f_id, philosophers[x].fork_left->fork_id, philosophers[x].fork_right->fork_id);
+		printf("philo n: %zu, and his fork left_id: %p, and his fork right_id:%p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
+// 		printf("philo n: %zu, and his fork left_lock: %p, and his fork right_lock: \
+// %p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
+
 		x++;
 	}
-
-	// i = 0;
-	// while(i < p_data.n_filos)
-	// {
-	// 	forks[i].fork_id = i + 1;
-	// 	forks[i + 1].fork_id = 
-	// 	philosophers[i].fork_left = &forks[i];
-	// }
-
-	//for(int x = 0; x < 3; x++);
+	// free(philosophers);
+	// free(forks);
 
 }
