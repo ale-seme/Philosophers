@@ -13,7 +13,6 @@ typedef struct s_program
 	int				time_to_eat;
 	int				time_to_sleep;
 	int				is_dead;
-	pthread_mutex_t	*forks;
 }	t_program;
 
 typedef struct s_fork
@@ -36,35 +35,36 @@ typedef struct s_philo
 
 }	t_philo;
 
-// void *routine(void *philos)
-// {
-// 	t_philo *new_philos;
+void *routine(void *philos)
+{
+	t_philo *new_philos;
 	
-// 	new_philos = (t_philo *)(philos);
+	new_philos = (t_philo *)(philos);
 
-// 	printf("new_philo\nf_id: %lu\ntv: %p\nthread: %p\nfork_right: %p\nfork_left: %p\ndata: %p\n", new_philos->f_id, &new_philos->tv, &new_philos->thread, new_philos->fork_right, new_philos->fork_left, new_philos->data);
-// 	pthread_mutex_lock(&new_philos->fork_left->lock);
-// 	pthread_mutex_lock(&new_philos->fork_right->lock);
-// 	if (new_philos->fork_left->is_taken || new_philos->fork_right->is_taken)
-// 	{
-// 		pthread_mutex_unlock(&new_philos->fork_left->lock);
-// 		pthread_mutex_unlock(&new_philos->fork_right->lock);
-// 		// think for x amount of time
-// 	}
-// 	else
-// 	{
-// 		new_philos->fork_left->is_taken = true;
-// 		new_philos->fork_right->is_taken = true;
-// 		pthread_mutex_unlock(&new_philos->fork_left->lock);
-// 		pthread_mutex_unlock(&new_philos->fork_right->lock);
-// 		// eat for x amount of time, then 
-// 		printf("philo n %ld: has taken the left fork\n", new_philos->f_id);
-// 	}
-// 	//pthread_mutex_unlock(&new_philos->fork_left.lock);
+	printf("new_philo\nf_id: %lu\ntv: %p\nthread: %p\nfork_right: %p\nfork_left: %p\ndata: %p\n", new_philos->f_id, &new_philos->tv, &new_philos->thread, new_philos->fork_right, new_philos->fork_left, new_philos->data);
+	pthread_mutex_lock(&new_philos->fork_left->lock);
+	pthread_mutex_lock(&new_philos->fork_right->lock);
+	if (new_philos->fork_left->is_taken || new_philos->fork_right->is_taken)
+	{
+		pthread_mutex_unlock(&new_philos->fork_left->lock);
+		pthread_mutex_unlock(&new_philos->fork_right->lock);
+		// think for x amount of time
+	}
+	else
+	{
+		new_philos->fork_left->is_taken = true;
+		new_philos->fork_right->is_taken = true;
+		pthread_mutex_unlock(&new_philos->fork_left->lock);
+		pthread_mutex_unlock(&new_philos->fork_right->lock);
+		// eat for x amount of time, then 
+		printf("philo n %ld: has taken the left fork\n", new_philos->f_id);
+		printf("philo n %ld: has taken the right fork\n", new_philos->f_id);
+	}
+	pthread_mutex_unlock(&new_philos->fork_left->lock);
 
-// 	return NULL;
+	return NULL;
 
-// }
+}
 
 int main(int argc, char **argv)
 {
@@ -110,7 +110,7 @@ int main(int argc, char **argv)
 	i = 0;
 	while (i < p_data.n_filos)
 	{
-		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers);
+		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
 		i++;
 	}
 	int x = 0;
