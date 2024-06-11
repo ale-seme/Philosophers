@@ -14,8 +14,7 @@ typedef struct s_program
 	int				time_to_sleep;
 	int				is_dead;
 	int				meals_needed;
-	struct timeval	g_time;
-	int				start_time;
+	long int		start_time;
 }	t_program;
 
 typedef struct s_fork
@@ -29,6 +28,7 @@ typedef struct s_philo
 	
 	size_t			f_id;
 	struct timeval	tv;
+	long int		last_meal;
 	pthread_t		thread;
 	t_fork			*fork_right;
 	t_fork			*fork_left;
@@ -36,6 +36,28 @@ typedef struct s_philo
 	//t_program 		*program;	
 
 }	t_philo;
+
+long int	get_time_in_ms()
+{
+	struct	timeval tv;
+	
+	gettimeofday(&tv, NULL);
+	return(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void *motitoring_routine(void *philos)
+{
+	t_philo *new_philos;
+	int i = 0;
+	new_philos = (t_philo *)(philos);
+
+
+	while(1)
+	{
+		while(new_philos->thread)
+		if (new_philos->last_meal - get_time_in_ms())
+	}
+}
 
 void *routine(void *philos)
 {
@@ -45,14 +67,19 @@ void *routine(void *philos)
 
 	pthread_mutex_lock(&new_philos->fork_left->lock);
 	pthread_mutex_lock(&new_philos->fork_right->lock);
-	printf("new_philo\nf_id: %lu\ntv: %p\nthread: %p\nfork_right: %p\nfork_left: %p\ndata: %p\n", new_philos->f_id, &new_philos->tv, &new_philos->thread, new_philos->fork_right, new_philos->fork_left, new_philos->data);
+	//printf("new_philo\nf_id: %lu\ntv: %p\nthread: %p\nfork_right: %p\nfork_left: %p\ndata: %p\n", new_philos->f_id, &new_philos->tv, &new_philos->thread, new_philos->fork_right, new_philos->fork_left, new_philos->data);
 	
-	printf("%ld philo n :%ld has taken the left fork\n", new_philos->data->g_time.tv_sec*1000 + new_philos->data->g_time.tv_usec/1000, new_philos->f_id);
-	printf("%ld philo n :%ld has taken the right fork\n", new_philos->data->g_time.tv_sec*1000 + new_philos->data->g_time.tv_usec/1000, new_philos->f_id);
-	printf("%ld philo n :%ld has taken the right fork\n", new_philos->data->g_time.tv_sec*1000 + new_philos->data->g_time.tv_usec/1000, new_philos->f_id);
-	usleep(200);
+	printf("%ld philo n :%ld has taken the left fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+	printf("%ld philo n :%ld has taken the right fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+	printf("%ld philo n :%ld is eating\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+	new_philos->last_meal = get_time_in_ms();
+
+	usleep(new_philos->data->time_to_eat);
 	pthread_mutex_unlock(&new_philos->fork_left->lock);
 	pthread_mutex_unlock(&new_philos->fork_right->lock);
+	printf("%ld philo n :%ld is sleeping\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+	usleep(new_philos->data->time_to_sleep);
+	printf("%ld philo n :%ld is thinking\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
 	return NULL;
 
 }
@@ -82,7 +109,9 @@ int main(int argc, char **argv)
 	
 	philosophers = malloc(sizeof(t_philo) *p_data.n_filos);
 	forks = malloc(sizeof(t_fork) *p_data.n_filos);
-	gettimeofday(&p_data.g_time, NULL);
+
+	p_data.start_time = get_time_in_ms();
+
 
 	i = 0;
 	while(i < p_data.n_filos)
@@ -97,6 +126,7 @@ int main(int argc, char **argv)
 		philosophers[i].f_id = i + 1;
 		philosophers[i].data = &p_data;
 		philosophers[i].fork_left = &forks[i];
+		philosophers[i].last_meal = 0;
 		if (i == 0)
 			philosophers[i].fork_right = &forks[p_data.n_filos - 1];
 		else
@@ -117,16 +147,15 @@ int main(int argc, char **argv)
 		pthread_join(philosophers[i].thread, NULL);
 		i++;
 	}
-	int x = 0;
-	while(x < p_data.n_filos)
-	{
-		printf("philo n: %zu, and his fork left_id: %p, and his fork right_id:%p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
+	//int x = 0;
+// 	while(x < p_data.n_filos)
+// 	{
+// 		printf("philo n: %zu, and his fork left_id: %p, and his fork right_id:%p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
 // 		printf("philo n: %zu, and his fork left_lock: %p, and his fork right_lock: \
 // %p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
 
 // 		x++;
-// 	}
+ 	//}
 	// free(philosophers);
 	// free(forks);
-
 }
