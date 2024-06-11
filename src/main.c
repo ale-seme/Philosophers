@@ -117,11 +117,11 @@ int main(int argc, char **argv)
 		i++;
 	}
 	int x = 0;
-// 	while(x < p_data.n_filos)
-// 	{
-// 		printf("philo n: %zu, and his fork left_id: %p, and his fork right_id:%p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
-// // 		printf("philo n: %zu, and his fork left_lock: %p, and his fork right_lock: \
-// // %p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
+	while(x < p_data.n_filos)
+	{
+		printf("philo n: %zu, and his fork left_id: %p, and his fork right_id:%p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
+// 		printf("philo n: %zu, and his fork left_lock: %p, and his fork right_lock: \
+// %p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
 
 // 		x++;
 // 	}
