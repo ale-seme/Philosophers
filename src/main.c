@@ -15,6 +15,7 @@ typedef struct s_program
 	int				is_dead;
 	int				meals_needed;
 	struct timeval	g_time;
+	int				start_time;
 }	t_program;
 
 typedef struct s_fork
