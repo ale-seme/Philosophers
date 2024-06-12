@@ -12,11 +12,11 @@ typedef struct s_program
 	int				time_to_die;
 	int				time_to_eat;
 	int				time_to_sleep;
-	bool			is_dead;
 	int				meals_needed;
 	long int		start_time;
 	pthread_mutex_t	death_lock;
 	pthread_mutex_t	print_lock;
+	bool			someone_died;
 }	t_program;
 
 typedef struct s_fork
@@ -35,10 +35,8 @@ typedef struct s_philo
 	t_fork			*fork_right;
 	t_fork			*fork_left;
 	t_program*		data;
-	//pthread_mutex_t	lock;
+	bool			is_dead;
 	pthread_mutex_t meal_lock;
-	//t_program 		*program;	
-
 }	t_philo;
 
 long int	get_time_in_ms()
@@ -65,7 +63,8 @@ void *monitoring_routine(void *philos)
 			if (get_time_in_ms() - new_philos[i].last_meal > new_philos[i].data->time_to_die)
 			{
 				pthread_mutex_lock(&new_philos[i].data->death_lock);
-				new_philos[i].data->is_dead = true;
+				new_philos[i].is_dead = true;
+				new_philos[i].data->someone_died = true;
 				pthread_mutex_unlock(&new_philos[i].data->death_lock);
 				// pthread_mutex_lock(&new_philos[i].data->print_lock);
 				// printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
@@ -91,11 +90,20 @@ void *routine(void *philos)
 	while(1)
 	{
 		pthread_mutex_lock(&new_philos->data->death_lock);
-		if (new_philos->data->is_dead)
+		if (new_philos->is_dead)
 		{
 			pthread_mutex_lock(&new_philos->data->print_lock);
 			printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
 			pthread_mutex_unlock(&new_philos->data->death_lock);
+			pthread_mutex_unlock(&new_philos->fork_left->lock);
+			pthread_mutex_unlock(&new_philos->fork_right->lock);
+			break;
+		}
+		if (new_philos->data->someone_died)
+		{
+			pthread_mutex_unlock(&new_philos->data->death_lock);
+			pthread_mutex_unlock(&new_philos->fork_left->lock);
+			pthread_mutex_unlock(&new_philos->fork_right->lock);
 			break;
 		}
 		pthread_mutex_unlock(&new_philos->data->death_lock);
@@ -151,15 +159,13 @@ int main(int argc, char **argv)
 		p_data.meals_needed = atoi(argv[5]);
 	else
 		p_data.meals_needed = 0;
-	
-	philosophers = malloc(sizeof(t_philo) *p_data.n_filos);
-	forks = malloc(sizeof(t_fork) *p_data.n_filos);
-
+	p_data.start_time = get_time_in_ms();
 	pthread_mutex_init(&p_data.death_lock, NULL);
 	pthread_mutex_init(&p_data.print_lock, NULL);
-	p_data.start_time = get_time_in_ms();
-	p_data.is_dead = false;
+	p_data.someone_died = false;
 
+	philosophers = malloc(sizeof(t_philo) *p_data.n_filos);
+	forks = malloc(sizeof(t_fork) *p_data.n_filos);
 
 	i = 0;
 	while(i < p_data.n_filos)
@@ -171,15 +177,16 @@ int main(int argc, char **argv)
 	i = 0;
 	while(i < p_data.n_filos)
 	{
+		philosophers[i].is_dead = false;
 		philosophers[i].f_id = i + 1;
 		philosophers[i].data = &p_data;
-		pthread_mutex_init(&philosophers[i].meal_lock, NULL);
 		philosophers[i].fork_left = &forks[i];
 		philosophers[i].last_meal = p_data.start_time;
 		if (i == 0)
 			philosophers[i].fork_right = &forks[p_data.n_filos - 1];
 		else
 			philosophers[i].fork_right = &forks[i - 1];
+		pthread_mutex_init(&philosophers[i].meal_lock, NULL);
 		//printf("philo n: %zu\n", philosophers[i].f_id);
 		i++;
 	}
@@ -191,17 +198,15 @@ int main(int argc, char **argv)
 		i++;
 	}
 	i = 0;
+	
 	pthread_join(monitor, NULL);
 	while(i < p_data.n_filos)
 	{
 		pthread_join(philosophers[i].thread, NULL);
 		i++;
 	}
-	i = 0;
-	while(i < p_data.n_filos)
-	{
-		
-	}
+	free(philosophers);
+	free(forks);
 	return (0);
 	//int x = 0;
 // 	while(x < p_data.n_filos)
