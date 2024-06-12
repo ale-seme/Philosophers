@@ -67,9 +67,9 @@ void *monitoring_routine(void *philos)
 				pthread_mutex_lock(&new_philos[i].data->death_lock);
 				new_philos[i].data->is_dead = true;
 				pthread_mutex_unlock(&new_philos[i].data->death_lock);
-				pthread_mutex_lock(&new_philos[i].data->print_lock);
-				//printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
-				pthread_mutex_unlock(&new_philos[i].data->print_lock);
+				// pthread_mutex_lock(&new_philos[i].data->print_lock);
+				// printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
+				// pthread_mutex_unlock(&new_philos[i].data->print_lock);
 				pthread_mutex_unlock(&new_philos[i].meal_lock);
 				return NULL;
 			}
@@ -142,7 +142,6 @@ int main(int argc, char **argv)
 	pthread_t			monitor;
 	int					i;
 
-	//p_data.g_time = 
 	
 	p_data.n_filos = atoi(argv[1]);
 	p_data.time_to_die = atoi(argv[2]);
@@ -181,7 +180,7 @@ int main(int argc, char **argv)
 			philosophers[i].fork_right = &forks[p_data.n_filos - 1];
 		else
 			philosophers[i].fork_right = &forks[i - 1];
-		printf("philo n: %zu\n", philosophers[i].f_id);
+		//printf("philo n: %zu\n", philosophers[i].f_id);
 		i++;
 	}
 	i = 0;
@@ -197,6 +196,11 @@ int main(int argc, char **argv)
 	{
 		pthread_join(philosophers[i].thread, NULL);
 		i++;
+	}
+	i = 0;
+	while(i < p_data.n_filos)
+	{
+		
 	}
 	return (0);
 	//int x = 0;
