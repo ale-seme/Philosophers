@@ -60,7 +60,9 @@ void *monitoring_routine(void *philos)
 		while(i < new_philos->data->n_filos)
 		{
 			pthread_mutex_lock(&new_philos[i].meal_lock);
-			if (get_time_in_ms() - new_philos[i].last_meal > new_philos[i].data->time_to_die)
+			// int fuck_heredoc = get_time_in_ms() - new_philos[i].last_meal;
+			// printf("COMPARING THIS WITH TIME OF DEATH %d for philo number %zu\n", fuck_heredoc, new_philos[i].f_id);
+			if (get_time_in_ms() - new_philos[i].last_meal >= new_philos[i].data->time_to_die)
 			{
 				pthread_mutex_lock(&new_philos[i].data->death_lock);
 				new_philos[i].is_dead = true;
@@ -94,21 +96,30 @@ void *routine(void *philos)
 		{
 			pthread_mutex_lock(&new_philos->data->print_lock);
 			printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+			pthread_mutex_unlock(&new_philos->data->print_lock);
 			pthread_mutex_unlock(&new_philos->data->death_lock);
-			pthread_mutex_unlock(&new_philos->fork_left->lock);
-			pthread_mutex_unlock(&new_philos->fork_right->lock);
+			//pthread_mutex_unlock(&new_philos->fork_left->lock);
+			//pthread_mutex_unlock(&new_philos->fork_right->lock);
 			break;
 		}
 		if (new_philos->data->someone_died)
 		{
 			pthread_mutex_unlock(&new_philos->data->death_lock);
-			pthread_mutex_unlock(&new_philos->fork_left->lock);
-			pthread_mutex_unlock(&new_philos->fork_right->lock);
+			//pthread_mutex_unlock(&new_philos->fork_left->lock);
+			//pthread_mutex_unlock(&new_philos->fork_right->lock);
 			break;
 		}
 		pthread_mutex_unlock(&new_philos->data->death_lock);
-		pthread_mutex_lock(&new_philos->fork_left->lock);
-		pthread_mutex_lock(&new_philos->fork_right->lock);
+		if (new_philos->f_id % 2 == 0)
+		{
+			pthread_mutex_lock(&new_philos->fork_right->lock);
+			pthread_mutex_lock(&new_philos->fork_left->lock);
+		}
+		else
+		{
+			pthread_mutex_lock(&new_philos->fork_left->lock);
+			pthread_mutex_lock(&new_philos->fork_right->lock);
+		}
 		//printf("new_philo\nf_id: %lu\ntv: %p\nthread: %p\nfork_right: %p\nfork_left: %p\ndata: %p\n", new_philos->f_id, &new_philos->tv, &new_philos->thread, new_philos->fork_right, new_philos->fork_left, new_philos->data);
 		
 		pthread_mutex_lock(&new_philos->data->print_lock);
@@ -194,6 +205,7 @@ int main(int argc, char **argv)
 	pthread_create(&monitor, NULL, &monitoring_routine, philosophers);
 	while (i < p_data.n_filos)
 	{
+		//printf("starting time of thilosopher thread n:%zu is:%ld", philosophers[i].f_id, get_time_in_ms() - p_data.start_time);
 		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
 		i++;
 	}
