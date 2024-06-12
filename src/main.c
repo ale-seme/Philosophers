@@ -16,6 +16,7 @@ typedef struct s_program
 	int				meals_needed;
 	long int		start_time;
 	pthread_mutex_t	death_lock;
+	pthread_mutex_t	print_lock;
 }	t_program;
 
 typedef struct s_fork
@@ -34,7 +35,7 @@ typedef struct s_philo
 	t_fork			*fork_right;
 	t_fork			*fork_left;
 	t_program*		data;
-	pthread_mutex_t	lock;
+	//pthread_mutex_t	lock;
 	pthread_mutex_t meal_lock;
 	//t_program 		*program;	
 
@@ -66,13 +67,15 @@ void *monitoring_routine(void *philos)
 				pthread_mutex_lock(&new_philos[i].data->death_lock);
 				new_philos[i].data->is_dead = true;
 				pthread_mutex_unlock(&new_philos[i].data->death_lock);
-				printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
+				pthread_mutex_lock(&new_philos[i].data->print_lock);
+				//printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
+				pthread_mutex_unlock(&new_philos[i].data->print_lock);
 				pthread_mutex_unlock(&new_philos[i].meal_lock);
 				return NULL;
 			}
 			pthread_mutex_unlock(&new_philos[i].meal_lock);
+			i++;
 		}
-		i++;
 		usleep(1000);
 	}
 	return NULL;
@@ -87,28 +90,40 @@ void *routine(void *philos)
 
 	while(1)
 	{
+		pthread_mutex_lock(&new_philos->data->death_lock);
+		if (new_philos->data->is_dead)
+		{
+			pthread_mutex_lock(&new_philos->data->print_lock);
+			printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+			pthread_mutex_unlock(&new_philos->data->death_lock);
+			break;
+		}
+		pthread_mutex_unlock(&new_philos->data->death_lock);
 		pthread_mutex_lock(&new_philos->fork_left->lock);
 		pthread_mutex_lock(&new_philos->fork_right->lock);
 		//printf("new_philo\nf_id: %lu\ntv: %p\nthread: %p\nfork_right: %p\nfork_left: %p\ndata: %p\n", new_philos->f_id, &new_philos->tv, &new_philos->thread, new_philos->fork_right, new_philos->fork_left, new_philos->data);
 		
+		pthread_mutex_lock(&new_philos->data->print_lock);
 		printf("%ld philo n :%ld has taken the left fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
 		printf("%ld philo n :%ld has taken the right fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
 		printf("%ld philo n :%ld is eating\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-		pthread_mutex_lock(&new_philos->lock);
+		pthread_mutex_unlock(&new_philos->data->print_lock);
+		pthread_mutex_lock(&new_philos->meal_lock);
 		new_philos->last_meal = get_time_in_ms();
-		pthread_mutex_unlock(&new_philos->lock);
+		pthread_mutex_unlock(&new_philos->meal_lock);
 		usleep(new_philos->data->time_to_eat *1000);
+
 		pthread_mutex_unlock(&new_philos->fork_left->lock);
 		pthread_mutex_unlock(&new_philos->fork_right->lock);
 
-		pthread_mutex_lock(&new_philos->lock);
+		pthread_mutex_lock(&new_philos->data->print_lock);
 		printf("%ld philo n :%ld is sleeping\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-		pthread_mutex_unlock(&new_philos->lock);
+		pthread_mutex_unlock(&new_philos->data->print_lock);
 
 		usleep(new_philos->data->time_to_sleep *1000);
+		pthread_mutex_lock(&new_philos->data->print_lock);
 		printf("%ld philo n :%ld is thinking\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-		pthread_mutex_lock(&new_philos->lock);
-		pthread_mutex_unlock(&new_philos->lock);
+		pthread_mutex_unlock(&new_philos->data->print_lock);
 	}
 	return NULL;
 
@@ -142,6 +157,7 @@ int main(int argc, char **argv)
 	forks = malloc(sizeof(t_fork) *p_data.n_filos);
 
 	pthread_mutex_init(&p_data.death_lock, NULL);
+	pthread_mutex_init(&p_data.print_lock, NULL);
 	p_data.start_time = get_time_in_ms();
 	p_data.is_dead = false;
 
@@ -158,7 +174,6 @@ int main(int argc, char **argv)
 	{
 		philosophers[i].f_id = i + 1;
 		philosophers[i].data = &p_data;
-		pthread_mutex_init(&philosophers[i].lock, NULL);
 		pthread_mutex_init(&philosophers[i].meal_lock, NULL);
 		philosophers[i].fork_left = &forks[i];
 		philosophers[i].last_meal = p_data.start_time;
@@ -166,7 +181,6 @@ int main(int argc, char **argv)
 			philosophers[i].fork_right = &forks[p_data.n_filos - 1];
 		else
 			philosophers[i].fork_right = &forks[i - 1];
-		//pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers);
 		printf("philo n: %zu\n", philosophers[i].f_id);
 		i++;
 	}
@@ -178,12 +192,13 @@ int main(int argc, char **argv)
 		i++;
 	}
 	i = 0;
+	pthread_join(monitor, NULL);
 	while(i < p_data.n_filos)
 	{
 		pthread_join(philosophers[i].thread, NULL);
 		i++;
 	}
-	pthread_join(monitor, NULL);
+	return (0);
 	//int x = 0;
 // 	while(x < p_data.n_filos)
 // 	{
