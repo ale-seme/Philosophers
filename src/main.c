@@ -78,22 +78,22 @@ void *monitoring_routine(void *philos)
 				new_philos[i].is_dead = true;
 				new_philos[i].data->someone_died = true;
 				pthread_mutex_unlock(&new_philos[i].data->death_lock);
-				if (new_philos[i].satisfied)
-					total_satisfaction++;
 				// pthread_mutex_lock(&new_philos[i].data->print_lock);
 				// printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
 				// pthread_mutex_unlock(&new_philos[i].data->print_lock);
 				pthread_mutex_unlock(&new_philos[i].meal_lock);
 				return NULL;
 			}
+			if (new_philos[i].satisfied)
+				total_satisfaction++;
 			pthread_mutex_unlock(&new_philos[i].meal_lock);
-			i++;
 			if (total_satisfaction >= new_philos->data->n_filos)
 			{
 				pthread_mutex_lock(&new_philos[i].data->death_lock);
-				new_philos[--i].data->someone_died = true;
+				new_philos[i].data->someone_died = true;
 				pthread_mutex_unlock(&new_philos[i].data->death_lock);
 			}
+			i++;
 		}
 		usleep(400);
 	}
