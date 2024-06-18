@@ -31,12 +31,14 @@ typedef struct s_philo
 	size_t			f_id;
 	struct timeval	tv;
 	long int		last_meal;
+	int				meals_eaten;
 	pthread_t		thread;
 	t_fork			*fork_right;
 	t_fork			*fork_left;
 	t_program*		data;
 	bool			is_dead;
 	pthread_mutex_t meal_lock;
+	bool			satisfied;
 }	t_philo;
 
 long int	get_time_in_ms()
@@ -51,6 +53,9 @@ void *monitoring_routine(void *philos)
 {
 	t_philo *new_philos;
 	int i;
+	int	total_satisfaction;
+
+	total_satisfaction = 0;
 	new_philos = (t_philo *)(philos);
 
 	i = 0;
@@ -73,6 +78,8 @@ void *monitoring_routine(void *philos)
 				new_philos[i].is_dead = true;
 				new_philos[i].data->someone_died = true;
 				pthread_mutex_unlock(&new_philos[i].data->death_lock);
+				if (new_philos[i].satisfied)
+					total_satisfaction++;
 				// pthread_mutex_lock(&new_philos[i].data->print_lock);
 				// printf("%ld philo n %zu: has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
 				// pthread_mutex_unlock(&new_philos[i].data->print_lock);
@@ -81,6 +88,12 @@ void *monitoring_routine(void *philos)
 			}
 			pthread_mutex_unlock(&new_philos[i].meal_lock);
 			i++;
+			if (total_satisfaction >= new_philos->data->n_filos)
+			{
+				pthread_mutex_lock(&new_philos[i].data->death_lock);
+				new_philos[--i].data->someone_died = true;
+				pthread_mutex_unlock(&new_philos[i].data->death_lock);
+			}
 		}
 		usleep(400);
 	}
@@ -167,12 +180,15 @@ void *routine(void *philos)
             pthread_mutex_unlock(&new_philos->fork_right->lock);
             break;
         }
-        pthread_mutex_lock(&new_philos->data->print_lock);
+
         printf("%ld philo n :%zu is eating\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
         pthread_mutex_unlock(&new_philos->data->print_lock);
 
         pthread_mutex_lock(&new_philos->meal_lock);
         new_philos->last_meal = get_time_in_ms();
+		new_philos->meals_eaten++;
+		if (new_philos->meals_eaten >= new_philos->data->meals_needed && new_philos->data->meals_needed >= 0)
+			new_philos->satisfied = true;
         pthread_mutex_unlock(&new_philos->meal_lock);
         usleep(new_philos->data->time_to_eat * 1000);
 
@@ -217,7 +233,7 @@ int main(int argc, char **argv)
 	if (argc == 6)
 		p_data.meals_needed = atoi(argv[5]);
 	else
-		p_data.meals_needed = 0;
+		p_data.meals_needed = -33;
 	p_data.start_time = get_time_in_ms();
 	pthread_mutex_init(&p_data.death_lock, NULL);
 	pthread_mutex_init(&p_data.print_lock, NULL);
@@ -241,6 +257,8 @@ int main(int argc, char **argv)
 		philosophers[i].data = &p_data;
 		philosophers[i].fork_left = &forks[i];
 		philosophers[i].last_meal = p_data.start_time;
+		philosophers[i].meals_eaten = 0;
+		philosophers[i].satisfied = false;
 		if (i == 0)
 			philosophers[i].fork_right = &forks[p_data.n_filos - 1];
 		else
