@@ -5,41 +5,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <sys/time.h>
-
-typedef struct s_program
-{
-	int				n_filos;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				meals_needed;
-	long int		start_time;
-	pthread_mutex_t	death_lock;
-	pthread_mutex_t	print_lock;
-	bool			someone_died;
-}	t_program;
-
-typedef struct s_fork
-{
-	pthread_mutex_t lock;
-	int				fork_id;
-}	t_fork;
-
-typedef struct s_philo
-{
-	
-	size_t			f_id;
-	struct timeval	tv;
-	long int		last_meal;
-	pthread_t		thread;
-	t_fork			*fork_right;
-	t_fork			*fork_left;
-	t_program*		data;
-	bool			is_dead;
-	pthread_mutex_t meal_lock;
-	bool			satisfied;
-	int				meals_eaten;
-}	t_philo;
+#include <Philo.h>
 
 
 long int	get_time_in_ms()
@@ -245,18 +211,7 @@ int main(int argc, char **argv)
 	int					i;
 
 	
-	p_data.n_filos = atoi(argv[1]);
-	p_data.time_to_die = atoi(argv[2]);
-	p_data.time_to_eat = atoi(argv[3]);
-	p_data.time_to_sleep = atoi(argv[4]);
-	if (argc == 6)
-		p_data.meals_needed = atoi(argv[5]);
-	else
-		p_data.meals_needed = -33;
-	p_data.start_time = get_time_in_ms();
-	pthread_mutex_init(&p_data.death_lock, NULL);
-	pthread_mutex_init(&p_data.print_lock, NULL);
-	p_data.someone_died = false;
+	initialize_data(&p_data, argc, argv);
 
 	philosophers = malloc(sizeof(t_philo) *p_data.n_filos);
 	forks = malloc(sizeof(t_fork) *p_data.n_filos);
