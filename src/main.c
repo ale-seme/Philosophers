@@ -197,7 +197,8 @@ void *routine(void *philos)
             pthread_mutex_unlock(&new_philos->fork_right->lock);
             break;
         }
-
+		if (death_check(new_philos))
+			break;
         printf("%ld philo n :%zu is eating\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
         pthread_mutex_unlock(&new_philos->data->print_lock);
 
