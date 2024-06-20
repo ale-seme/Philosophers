@@ -38,6 +38,7 @@ typedef struct s_philo
 	bool			is_dead;
 	pthread_mutex_t meal_lock;
 	bool			satisfied;
+	int				meals_eaten;
 }	t_philo;
 
 
@@ -47,6 +48,20 @@ long int	get_time_in_ms()
 	
 	gettimeofday(&tv, NULL);
 	return(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	ft_sleep(long int sleep_time_in_ms)
+{
+	long int	start_time;
+	long int	time_passed;
+
+	start_time = get_time_in_ms();
+	time_passed = 0;
+	while(time_passed < sleep_time_in_ms)
+	{
+		usleep(50 *1000);
+		time_passed = get_time_in_ms() - start_time;
+	}
 }
 
 void *monitoring_routine(void *philos)
@@ -62,7 +77,6 @@ void *monitoring_routine(void *philos)
 	while(1)
 	{
 		i = 0;
-		x = 0;
 		total_satisfaction = 0;
 		while(i < new_philos->data->n_filos)
 		{
@@ -86,25 +100,18 @@ void *monitoring_routine(void *philos)
 				pthread_mutex_unlock(&new_philos[i].meal_lock);
 				return NULL;
 			}
+			if (new_philos[i].satisfied)
+				total_satisfaction++;
 			pthread_mutex_unlock(&new_philos[i].meal_lock);
 			i++;
 		}
-		// pthread_mutex_lock(&new_philos[0].meal_lock);
-		// for (x; x < new_philos[0].data->n_filos; x++)
-		// {
-		// 	//printf("hello\n");
-		// 	if (!new_philos[x].satisfied)
-		// 		break;
-		// }
-		// //printf("total satisfaction after looping all the PHILOSSSS %d\n", x);
-		// if (++x == new_philos->data->n_filos)
-		// {
-		// 	printf("FAKING HELL!!\n");
-		// 	pthread_mutex_lock(&new_philos[0].data->death_lock);
-		// 	new_philos[0].data->someone_died = true;
-		// 	pthread_mutex_unlock(&new_philos[0].data->death_lock);
-		// }
-		pthread_mutex_unlock(&new_philos[0].meal_lock);
+		if (total_satisfaction == new_philos->data->n_filos)
+		{
+			pthread_mutex_lock(&new_philos[0].data->death_lock);
+			new_philos[0].data->someone_died = true;
+			pthread_mutex_unlock(&new_philos[0].data->death_lock);
+			return (NULL);
+		}
 		usleep(500);
 	}
 	return NULL;
@@ -132,12 +139,9 @@ int	death_check(t_philo *new_philos)
 void *routine(void *philos)
 {
     t_philo *new_philos = (t_philo *)(philos);
-	int meals_eaten_routine;
 
-    meals_eaten_routine = 0;
     while (1)
     {
-
 		if (death_check(new_philos))
             break;
         if (new_philos->f_id % 2 == 0)
@@ -199,11 +203,11 @@ void *routine(void *philos)
 
         pthread_mutex_lock(&new_philos->meal_lock);
         new_philos->last_meal = get_time_in_ms();
-		meals_eaten_routine++;
-		if (meals_eaten_routine >= new_philos->data->meals_needed && new_philos->data->meals_needed >= 0)
+		new_philos->meals_eaten++;
+		if (new_philos->meals_eaten >= new_philos->data->meals_needed && new_philos->data->meals_needed >= 0)
 			new_philos->satisfied = true;
         pthread_mutex_unlock(&new_philos->meal_lock);
-        usleep(new_philos->data->time_to_eat * 1000);
+        ft_sleep(new_philos->data->time_to_eat);
 
         pthread_mutex_unlock(&new_philos->fork_left->lock);
         pthread_mutex_unlock(&new_philos->fork_right->lock);
@@ -214,7 +218,7 @@ void *routine(void *philos)
         printf("%ld philo n :%zu is sleeping\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
         pthread_mutex_unlock(&new_philos->data->print_lock);
 
-        usleep(new_philos->data->time_to_sleep * 1000);
+        ft_sleep(new_philos->data->time_to_sleep);
 
         if (death_check(new_philos))
             break;
@@ -270,6 +274,7 @@ int main(int argc, char **argv)
 		philosophers[i].data = &p_data;
 		philosophers[i].fork_left = &forks[i];
 		philosophers[i].last_meal = p_data.start_time;
+		philosophers[i].meals_eaten = 0;
 		philosophers[i].satisfied = false;
 		if (i == 0)
 			philosophers[i].fork_right = &forks[p_data.n_filos - 1];
