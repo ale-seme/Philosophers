@@ -22,7 +22,6 @@ typedef struct s_program
 typedef struct s_fork
 {
 	pthread_mutex_t lock;
-	int				fork_id;
 }	t_fork;
 
 typedef struct s_philo
@@ -42,4 +41,10 @@ typedef struct s_philo
 }	t_philo;
 
 void	initialize_data(t_program *p_data, int argc, char **argv);
-
+void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);
+void	*routine(void *philos);
+void	create_philos_threads(t_philo *philosophers);
+void    join_philos_threads(t_philo *philosophers);
+long int	get_time_in_ms();
+void	ft_sleep(long int sleep_time_in_ms);
+int	death_check(t_philo *new_philos);

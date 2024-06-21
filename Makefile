@@ -1,11 +1,11 @@
 NAME = philo
 
-CFLAGS = -g
+CFLAGS = -g -fsanitize=address
 
 LINKS = 
 INCLUDES = -I./include
 
-SRC = main.c initialization.c
+SRC = main.c initialization.c philo_threads.c
 
 
 DIR_SRC = src

@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <time.h>
 #include <sys/time.h>
-#include <Philo.h>
+#include "Philo.h"
 
 
 long int	get_time_in_ms()
@@ -94,181 +94,32 @@ int	death_check(t_philo *new_philos)
 	if (new_philos->data->someone_died)
 	{
 		pthread_mutex_unlock(&new_philos->data->death_lock);
-		//pthread_mutex_unlock(&new_philos->fork_left->lock);
-		//pthread_mutex_unlock(&new_philos->fork_right->lock);
 		return (1);
 	}
 	pthread_mutex_unlock(&new_philos->data->death_lock);
 	return (0);
 }
 
-void *routine(void *philos)
-{
-    t_philo *new_philos = (t_philo *)(philos);
-
-    while (1)
-    {
-		if (death_check(new_philos))
-            break;
-        if (new_philos->f_id % 2 == 0)
-        {
-            pthread_mutex_lock(&new_philos->fork_right->lock);
-            if (death_check(new_philos))
-            {
-                pthread_mutex_unlock(&new_philos->fork_right->lock);
-                break;
-            }
-            pthread_mutex_lock(&new_philos->data->print_lock);
-            printf("%ld philo n :%zu has taken the right fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-            pthread_mutex_unlock(&new_philos->data->print_lock);
-
-            pthread_mutex_lock(&new_philos->fork_left->lock);
-            if (death_check(new_philos))
-            {
-                pthread_mutex_unlock(&new_philos->fork_left->lock);
-                pthread_mutex_unlock(&new_philos->fork_right->lock);
-                break;
-            }
-            pthread_mutex_lock(&new_philos->data->print_lock);
-            printf("%ld philo n :%zu has taken the left fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-            pthread_mutex_unlock(&new_philos->data->print_lock);
-        }
-        else
-        {
-            pthread_mutex_lock(&new_philos->fork_left->lock);
-            if (death_check(new_philos))
-            {
-                pthread_mutex_unlock(&new_philos->fork_left->lock);
-                break;
-            }
-            pthread_mutex_lock(&new_philos->data->print_lock);
-            printf("%ld philo n :%zu has taken the left fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-            pthread_mutex_unlock(&new_philos->data->print_lock);
-
-            pthread_mutex_lock(&new_philos->fork_right->lock);
-            if (death_check(new_philos))
-            {
-                pthread_mutex_unlock(&new_philos->fork_right->lock);
-                pthread_mutex_unlock(&new_philos->fork_left->lock);
-                break;
-            }
-            pthread_mutex_lock(&new_philos->data->print_lock);
-            printf("%ld philo n :%zu has taken the right fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-            pthread_mutex_unlock(&new_philos->data->print_lock);
-        }
-
-        if (death_check(new_philos))
-        {
-            pthread_mutex_unlock(&new_philos->fork_left->lock);
-            pthread_mutex_unlock(&new_philos->fork_right->lock);
-            break;
-        }
-		if (death_check(new_philos))
-			break;
-		pthread_mutex_lock(&new_philos->data->print_lock);
-        printf("%ld philo n :%zu is eating\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-        pthread_mutex_unlock(&new_philos->data->print_lock);
-
-        pthread_mutex_lock(&new_philos->meal_lock);
-        new_philos->last_meal = get_time_in_ms();
-		new_philos->meals_eaten++;
-		if (new_philos->meals_eaten >= new_philos->data->meals_needed && new_philos->data->meals_needed >= 0)
-			new_philos->satisfied = true;
-        pthread_mutex_unlock(&new_philos->meal_lock);
-        ft_sleep(new_philos->data->time_to_eat);
-
-        pthread_mutex_unlock(&new_philos->fork_left->lock);
-        pthread_mutex_unlock(&new_philos->fork_right->lock);
-
-        if (death_check(new_philos))
-            break;
-        pthread_mutex_lock(&new_philos->data->print_lock);
-        printf("%ld philo n :%zu is sleeping\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-        pthread_mutex_unlock(&new_philos->data->print_lock);
-
-        ft_sleep(new_philos->data->time_to_sleep);
-
-        if (death_check(new_philos))
-            break;
-        pthread_mutex_lock(&new_philos->data->print_lock);
-        printf("%ld philo n :%zu is thinking\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
-        pthread_mutex_unlock(&new_philos->data->print_lock);
-    }
-    return NULL;
-}
-
 int main(int argc, char **argv)
 {
-	if (argc < 5 || argc > 6)
-	{
-		printf("not right amout of argument given\n");
-		return (1);
-	}
 	t_program 			p_data;
 	t_philo				*philosophers;
 	t_fork				*forks;
 	pthread_t			monitor;
 	int					i;
 
-	
+	if (argc < 5 || argc > 6)
+	{
+		printf("not right amout of arguments given\n");
+		return (1);
+	}
 	initialize_data(&p_data, argc, argv);
-
-	philosophers = malloc(sizeof(t_philo) *p_data.n_filos);
-	forks = malloc(sizeof(t_fork) *p_data.n_filos);
-
-	i = 0;
-	while(i < p_data.n_filos)
-	{
-		forks[i].fork_id = i + 1;
-		pthread_mutex_init(&forks[i].lock, NULL);
-		i++;
-	}
-	i = 0;
-	while(i < p_data.n_filos)
-	{
-		philosophers[i].is_dead = false;
-		philosophers[i].f_id = i + 1;
-		philosophers[i].data = &p_data;
-		philosophers[i].fork_left = &forks[i];
-		philosophers[i].last_meal = p_data.start_time;
-		philosophers[i].meals_eaten = 0;
-		philosophers[i].satisfied = false;
-		if (i == 0)
-			philosophers[i].fork_right = &forks[p_data.n_filos - 1];
-		else
-			philosophers[i].fork_right = &forks[i - 1];
-		pthread_mutex_init(&philosophers[i].meal_lock, NULL);
-		//printf("philo n: %zu\n", philosophers[i].f_id);
-		i++;
-	}
-	i = 0;
+	init_forks_and_philos(philosophers, forks, &p_data);
 	pthread_create(&monitor, NULL, &monitoring_routine, philosophers);
-	while (i < p_data.n_filos)
-	{
-		//printf("starting time of thilosopher thread n:%zu is:%ld", philosophers[i].f_id, get_time_in_ms() - p_data.start_time);
-		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
-		i++;
-	}
-	i = 0;
-	
+	create_philos_threads(philosophers);
 	pthread_join(monitor, NULL);
-	while(i < p_data.n_filos)
-	{
-		pthread_join(philosophers[i].thread, NULL);
-		i++;
-	}
+	join_philos_threads(philosophers);
 	free(philosophers);
 	free(forks);
 	return (0);
-	//int x = 0;
-// 	while(x < p_data.n_filos)
-// 	{
-// 		printf("philo n: %zu, and his fork left_id: %p, and his fork right_id:%p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
-// 		printf("philo n: %zu, and his fork left_lock: %p, and his fork right_lock: \
-// %p\n", philosophers[x].f_id, philosophers[x].fork_left, philosophers[x].fork_right);
-
-// 		x++;
- 	//}
-	// free(philosophers);
-	// free(forks);
 }

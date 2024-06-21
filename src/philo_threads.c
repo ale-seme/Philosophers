@@ -1,0 +1,123 @@
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <stdbool.h>
+#include <time.h>
+#include <sys/time.h>
+#include "Philo.h"
+
+void *routine(void *philos)
+{
+    t_philo *new_philos = (t_philo *)(philos);
+
+    while (1)
+    {
+		if (death_check(new_philos))
+            break;
+        if (new_philos->f_id % 2 == 0)
+        {
+            pthread_mutex_lock(&new_philos->fork_right->lock);
+            if (death_check(new_philos))
+            {
+                pthread_mutex_unlock(&new_philos->fork_right->lock);
+                break;
+            }
+            pthread_mutex_lock(&new_philos->data->print_lock);
+            printf("%ld philo n :%zu has taken the right fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+            pthread_mutex_unlock(&new_philos->data->print_lock);
+
+            pthread_mutex_lock(&new_philos->fork_left->lock);
+            if (death_check(new_philos))
+            {
+                pthread_mutex_unlock(&new_philos->fork_left->lock);
+                pthread_mutex_unlock(&new_philos->fork_right->lock);
+                break;
+            }
+            pthread_mutex_lock(&new_philos->data->print_lock);
+            printf("%ld philo n :%zu has taken the left fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+            pthread_mutex_unlock(&new_philos->data->print_lock);
+        }
+        else
+        {
+            pthread_mutex_lock(&new_philos->fork_left->lock);
+            if (death_check(new_philos))
+            {
+                pthread_mutex_unlock(&new_philos->fork_left->lock);
+                break;
+            }
+            pthread_mutex_lock(&new_philos->data->print_lock);
+            printf("%ld philo n :%zu has taken the left fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+            pthread_mutex_unlock(&new_philos->data->print_lock);
+
+            pthread_mutex_lock(&new_philos->fork_right->lock);
+            if (death_check(new_philos))
+            {
+                pthread_mutex_unlock(&new_philos->fork_right->lock);
+                pthread_mutex_unlock(&new_philos->fork_left->lock);
+                break;
+            }
+            pthread_mutex_lock(&new_philos->data->print_lock);
+            printf("%ld philo n :%zu has taken the right fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+            pthread_mutex_unlock(&new_philos->data->print_lock);
+        }
+
+        if (death_check(new_philos))
+        {
+            pthread_mutex_unlock(&new_philos->fork_left->lock);
+            pthread_mutex_unlock(&new_philos->fork_right->lock);
+            break;
+        }
+		if (death_check(new_philos))
+			break;
+		pthread_mutex_lock(&new_philos->data->print_lock);
+        printf("%ld philo n :%zu is eating\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+        pthread_mutex_unlock(&new_philos->data->print_lock);
+
+        pthread_mutex_lock(&new_philos->meal_lock);
+        new_philos->last_meal = get_time_in_ms();
+		new_philos->meals_eaten++;
+		if (new_philos->meals_eaten >= new_philos->data->meals_needed && new_philos->data->meals_needed >= 0)
+			new_philos->satisfied = true;
+        pthread_mutex_unlock(&new_philos->meal_lock);
+        ft_sleep(new_philos->data->time_to_eat);
+
+        pthread_mutex_unlock(&new_philos->fork_left->lock);
+        pthread_mutex_unlock(&new_philos->fork_right->lock);
+
+        if (death_check(new_philos))
+            break;
+        pthread_mutex_lock(&new_philos->data->print_lock);
+        printf("%ld philo n :%zu is sleeping\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+        pthread_mutex_unlock(&new_philos->data->print_lock);
+
+        ft_sleep(new_philos->data->time_to_sleep);
+
+        if (death_check(new_philos))
+            break;
+        pthread_mutex_lock(&new_philos->data->print_lock);
+        printf("%ld philo n :%zu is thinking\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
+        pthread_mutex_unlock(&new_philos->data->print_lock);
+    }
+    return NULL;
+}
+
+void	create_philos_threads(t_philo *philosophers)
+{
+	int i;
+
+	i = -1;
+	while(++i < philosophers->data->n_filos)
+		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
+}
+
+void    join_philos_threads(t_philo *philosophers)
+{
+    int i;
+
+    i = -1;
+    while(++i < philosophers->data->n_filos)
+    {
+        pthread_join(philosophers[i].thread, NULL);
+    }
+}
