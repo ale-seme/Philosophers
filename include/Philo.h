@@ -40,3 +40,6 @@ typedef struct s_philo
 	bool			satisfied;
 	int				meals_eaten;
 }	t_philo;
+
+void	initialize_data(t_program *p_data, int argc, char **argv);
+

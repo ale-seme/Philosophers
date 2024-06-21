@@ -6,11 +6,32 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/06/21 00:39:40 by ale           ########   odam.nl         */
+/*   Updated: 2024/06/21 13:04:34 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Philo.h"
+
+void free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks)
+{
+	int i;
+	
+	i = 0;
+	if (p_data)
+	{
+		pthread_mutex_destroy(&p_data->death_lock);
+		pthread_mutex_destroy(&p_data->print_lock);
+	}
+	if (philos)
+	{
+		while(i < p_data->n_filos)
+		{
+			pthread_mutex_destroy(&philos[i].meal_lock);
+		}
+		free(philo);
+	}
+	
+}
 
 void	initialize_data(t_program *p_data, int argc, char **argv)
 {
@@ -26,4 +47,34 @@ void	initialize_data(t_program *p_data, int argc, char **argv)
 	pthread_mutex_init(&p_data->death_lock, NULL);
 	pthread_mutex_init(&p_data->print_lock, NULL);
 	p_data->someone_died = false;
+}
+void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data)
+{
+	int i;
+	
+	i = 0;
+	philos = malloc(sizeof(t_philo) * p_data->n_filos);
+	if (!philos)
+		return (free_and_destroy(p_data, NULL, NULL), NULL);
+	forks = malloc(sizeof(t_fork) * p_data->n_filos);
+	if (!forks)
+		return (free_and_destroy(p_data, philos, NULL), NULL);
+	while(i < p_data->n_filos)
+	{
+		philos[i].is_dead = false;
+		philos[i].f_id = i + 1;
+		philos[i].data = &p_data;
+		philos[i].fork_left = &forks[i];
+		philos[i].last_meal = p_data->start_time;
+		philos[i].meals_eaten = 0;
+		philos[i].satisfied = false;
+		if (i == 0)
+			philos[i].fork_right = &forks[p_data->n_filos - 1];
+		else
+			philos[i].fork_right = &forks[i - 1];
+		pthread_mutex_init(&philos[i].meal_lock, NULL);
+		i++;
+	}
+	
+	
 }
