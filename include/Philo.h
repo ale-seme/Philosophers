@@ -40,11 +40,13 @@ typedef struct s_philo
 	int				meals_eaten;
 }	t_philo;
 
-void	initialize_data(t_program *p_data, int argc, char **argv);
-void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);
-void	*routine(void *philos);
-void	create_philos_threads(t_philo *philosophers);
-void    join_philos_threads(t_philo *philosophers);
+void		initialize_data(t_program *p_data, int argc, char **argv);
+void		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);
+void		*routine(void *philos);
+void		create_philos_threads(t_philo *philosophers);
+void    	join_philos_threads(t_philo *philosophers);
 long int	get_time_in_ms();
-void	ft_sleep(long int sleep_time_in_ms);
-int	death_check(t_philo *new_philos);
+void		ft_sleep(long int sleep_time_in_ms);
+int			death_check(t_philo *new_philos);
+void		free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks);
+
