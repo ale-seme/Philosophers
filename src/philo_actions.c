@@ -40,21 +40,19 @@ int	grabbing_forks_odd(t_philo *new_philos)
 	{
 		pthread_mutex_lock(&new_philos->fork_left->lock);
 		if (death_check(new_philos))
-		{
-			pthread_mutex_unlock(&new_philos->fork_left->lock);
-			return (0);
-		}
+			return(pthread_mutex_unlock(&new_philos->fork_left->lock), 0);
 		pthread_mutex_lock(&new_philos->data->print_lock);
 		printf("%ld philo n :%zu has taken the left fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
 		pthread_mutex_unlock(&new_philos->data->print_lock);
-
+		if (new_philos->data->n_filos == 1)
+		{
+			ft_sleep(new_philos->data->time_to_die + 1);
+			if (death_check(new_philos))
+				return (pthread_mutex_unlock(&new_philos->fork_left->lock), 0);
+		}
 		pthread_mutex_lock(&new_philos->fork_right->lock);
 		if (death_check(new_philos))
-		{
-			pthread_mutex_unlock(&new_philos->fork_right->lock);
-			pthread_mutex_unlock(&new_philos->fork_left->lock);
-			return (0);
-		}
+			return (pthread_mutex_unlock(&new_philos->fork_right->lock), pthread_mutex_unlock(&new_philos->fork_left->lock), 0);
 		pthread_mutex_lock(&new_philos->data->print_lock);
 		printf("%ld philo n :%zu has taken the right fork\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
 		pthread_mutex_unlock(&new_philos->data->print_lock);
