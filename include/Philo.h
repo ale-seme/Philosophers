@@ -50,3 +50,13 @@ void		ft_sleep(long int sleep_time_in_ms);
 int			death_check(t_philo *new_philos);
 void		free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks);
 
+/*philosophers actions*/
+int	grabbing_forks_even(t_philo *new_philos);
+int	grabbing_forks_odd(t_philo *new_philos);
+int	action_eating(t_philo *new_philos);
+int	action_sleeping(t_philo *new_philos);
+int	action_thinking(t_philo *new_philos);
+
+
+
+

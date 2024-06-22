@@ -5,7 +5,7 @@ CFLAGS = -g -fsanitize=address
 LINKS = 
 INCLUDES = -I./include
 
-SRC = main.c initialization.c philo_threads.c utils.c
+SRC = main.c initialization.c philo_threads.c utils.c philo_actions.c
 
 
 DIR_SRC = src
