@@ -43,13 +43,12 @@ int	ft_sleep(long int sleep_time_in_ms, t_philo*new_philos)
 	{
 		usleep(50 *1000);
 		time_passed = get_time_in_ms() - start_time;
-		if (death_check(new_philos))
-		{
-			// pthread_mutex_lock(&new_philos->meal_lock);
-			// new_philos->last_meal = new_philos->data->time_to_die;
-			// pthread_mutex_unlock(&new_philos->meal_lock);
-			return(1);
-		}
+		// if (death_check(new_philos))
+		// {
+		// 	pthread_mutex_lock(&new_philos->meal_lock);
+		// 	new_philos->last_meal = new_philos->data->time_to_die;
+		// 	pthread_mutex_lock(&new_philos->meal_lock);
+		// }
 	}
 	return (0);
 
