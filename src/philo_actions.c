@@ -75,7 +75,11 @@ int	action_eating(t_philo *new_philos)
 		new_philos->satisfied = true;
 	pthread_mutex_unlock(&new_philos->meal_lock);
 	if (!ft_sleep(new_philos->data->time_to_eat, new_philos))
+	{
+		pthread_mutex_unlock(&new_philos->fork_left->lock);
+		pthread_mutex_unlock(&new_philos->fork_right->lock);	
 		return (0);
+	}
 	pthread_mutex_unlock(&new_philos->fork_left->lock);
 	pthread_mutex_unlock(&new_philos->fork_right->lock);
 	return (1);
