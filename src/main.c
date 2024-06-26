@@ -34,8 +34,8 @@ void *monitoring_routine(void *philos)
 	int	total_satisfaction;
 
 	new_philos = (t_philo *)(philos);
-	while(!new_philos->data->synchronized)
-		continue;
+	// while(!new_philos->data->synchronized)
+	// 	continue;
 	while(1)
 	{
 		i = 0;
@@ -43,6 +43,7 @@ void *monitoring_routine(void *philos)
 		while(i < new_philos->data->n_filos)
 		{
 			pthread_mutex_lock(&new_philos[i].meal_lock);
+			//printf("philo last meal %ld\n", new_philos[i].last_meal);
 			if (get_time_in_ms() - new_philos[i].last_meal >= new_philos[i].data->time_to_die)
 				return (display_and_set_death(new_philos, i), NULL);
 			if (new_philos[i].satisfied)
@@ -75,8 +76,8 @@ int main(int argc, char **argv)
 	if (!forks)
 		return (free_and_destroy(&p_data, philosophers, NULL), 1);
 	init_forks_and_philos(philosophers, forks, &p_data);
-	pthread_create(&monitor, NULL, &monitoring_routine, philosophers);
 	create_philos_threads(philosophers);
+	pthread_create(&monitor, NULL, &monitoring_routine, philosophers);
 	pthread_join(monitor, NULL);
 	join_philos_threads(philosophers);
 	return (free(philosophers), free(forks), 0);
