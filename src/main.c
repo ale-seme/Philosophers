@@ -10,9 +10,9 @@
 
 void	display_and_set_death(t_philo *new_philos, int i)
 {
-	pthread_mutex_lock(&new_philos->data->print_lock);
+	//pthread_mutex_lock(&new_philos->data->print_lock);
 	printf("%ld philo n: %zu has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
-	pthread_mutex_unlock(&new_philos->data->print_lock);
+	//pthread_mutex_unlock(&new_philos->data->print_lock);
 	pthread_mutex_lock(&new_philos[i].data->death_lock);
 	new_philos[i].is_dead = true;
 	new_philos[i].data->someone_died = true;

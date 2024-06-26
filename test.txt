@@ -1,0 +1,94 @@
+0 philo n :1 has taken the left fork
+0 philo n :1 has taken the right fork
+0 philo n :1 is eating
+0 philo n :3 has taken the left fork
+0 philo n :3 has taken the right fork
+0 philo n :3 is eating
+201 philo n :1 is sleeping
+201 philo n :3 is sleeping
+201 philo n :4 has taken the right fork
+201 philo n :4 has taken the left fork
+201 philo n :4 is eating
+201 philo n :2 has taken the right fork
+201 philo n :2 has taken the left fork
+201 philo n :2 is eating
+401 philo n :1 is thinking
+401 philo n :1 has taken the left fork
+401 philo n :2 is sleeping
+401 philo n :4 is sleeping
+401 philo n :1 has taken the right fork
+401 philo n :1 is eating
+401 philo n :3 is thinking
+401 philo n :3 has taken the left fork
+401 philo n :3 has taken the right fork
+401 philo n :3 is eating
+602 philo n :4 is thinking
+602 philo n :2 is thinking
+602 philo n :2 has taken the right fork
+602 philo n :3 is sleeping
+602 philo n :2 has taken the left fork
+602 philo n :1 is sleeping
+602 philo n :2 is eating
+602 philo n :4 has taken the right fork
+602 philo n :4 has taken the left fork
+602 philo n :4 is eating
+802 philo n :3 is thinking
+802 philo n :4 is sleeping
+802 philo n :3 has taken the left fork
+802 philo n :2 is sleeping
+802 philo n :3 has taken the right fork
+802 philo n :3 is eating
+802 philo n :1 is thinking
+802 philo n :1 has taken the left fork
+802 philo n :1 has taken the right fork
+802 philo n :1 is eating
+1003 philo n :3 is sleeping
+1003 philo n :4 is thinking
+1003 philo n :1 is sleeping
+1003 philo n :4 has taken the right fork
+1003 philo n :4 has taken the left fork
+1003 philo n :4 is eating
+1003 philo n :2 is thinking
+1003 philo n :2 has taken the right fork
+1003 philo n :2 has taken the left fork
+1003 philo n :2 is eating
+1203 philo n :4 is sleeping
+1203 philo n :3 is thinking
+1203 philo n :1 is thinking
+1203 philo n :3 has taken the left fork
+1203 philo n :2 is sleeping
+1203 philo n :1 has taken the left fork
+1203 philo n :1 has taken the right fork
+1203 philo n :1 is eating
+1203 philo n :3 has taken the right fork
+1203 philo n :3 is eating
+1404 philo n :3 is sleeping
+1404 philo n :2 is thinking
+1404 philo n :1 is sleeping
+1404 philo n :4 is thinking
+1404 philo n :4 has taken the right fork
+1404 philo n :4 has taken the left fork
+1404 philo n :4 is eating
+1404 philo n :2 has taken the right fork
+1404 philo n :2 has taken the left fork
+1404 philo n :2 is eating
+1604 philo n :3 is thinking
+1604 philo n :1 is thinking
+1604 philo n :4 is sleeping
+1604 philo n :2 is sleeping
+1604 philo n :1 has taken the left fork
+1604 philo n :1 has taken the right fork
+1604 philo n :1 is eating
+1604 philo n :3 has taken the left fork
+1604 philo n :3 has taken the right fork
+1604 philo n :3 is eating
+1805 philo n :2 is thinking
+1805 philo n :4 is thinking
+1805 philo n :1 is sleeping
+1805 philo n :3 is sleeping
+1805 philo n :2 has taken the right fork
+1805 philo n :2 has taken the left fork
+1805 philo n :2 is eating
+1805 philo n :4 has taken the right fork
+1805 philo n :4 has taken the left fork
+1805 philo n :4 is eating
