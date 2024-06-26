@@ -47,7 +47,7 @@ void	create_philos_threads(t_philo *philosophers)
 		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
 	pthread_mutex_lock(&philosophers->data->start_lock);
 	philosophers->data->synchronized = true;
-	//philosophers->data->start_time = get_time_in_ms();
+	//philosophers->data->start_time = get_time_in_ms(); 
 	pthread_mutex_unlock(&philosophers->data->start_lock);
 }
 
