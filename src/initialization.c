@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/06/22 17:16:51 by ale           ########   odam.nl         */
+/*   Updated: 2024/06/26 13:19:15 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ void	initialize_data(t_program *p_data, int argc, char **argv)
 	p_data->start_time = get_time_in_ms();
 	pthread_mutex_init(&p_data->death_lock, NULL);
 	pthread_mutex_init(&p_data->print_lock, NULL);
+	pthread_mutex_init(&p_data->start_lock, NULL);
+	p_data->start_simulation = false;
 	p_data->someone_died = false;
 }
 void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)

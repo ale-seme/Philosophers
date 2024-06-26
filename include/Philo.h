@@ -16,7 +16,8 @@ typedef struct s_program
 	long int		start_time;
 	pthread_mutex_t	death_lock;
 	pthread_mutex_t	print_lock;
-	//pthread_mutex_t	start_lock;
+	pthread_mutex_t	start_lock;
+	bool			start_simulation;
 	bool			someone_died;
 }	t_program;
 
