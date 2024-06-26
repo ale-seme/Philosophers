@@ -24,7 +24,7 @@ void	ft_sleep(long int sleep_time_in_ms)
 	time_passed = 0;
 	while(time_passed < sleep_time_in_ms)
 	{
-		usleep(50 *1000);
+		usleep(2000);
 		time_passed = get_time_in_ms() - start_time;
 	}
 }
