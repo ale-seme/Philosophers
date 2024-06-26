@@ -12,6 +12,8 @@ void *routine(void *philos)
 {
 	t_philo *new_philos = (t_philo *)(philos);
 
+	while(!new_philos->data->synchronized)
+		continue;
 	while (1)
 	{
 		if (death_check(new_philos))
@@ -43,6 +45,10 @@ void	create_philos_threads(t_philo *philosophers)
 	i = -1;
 	while(++i < philosophers->data->n_filos)
 		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
+	pthread_mutex_lock(&philosophers->data->start_lock);
+	philosophers->data->synchronized = true;
+	//philosophers->data->start_time = get_time_in_ms();
+	pthread_mutex_unlock(&philosophers->data->start_lock);
 }
 
 void    join_philos_threads(t_philo *philosophers)

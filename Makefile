@@ -1,6 +1,6 @@
 NAME = philo
 
-CFLAGS = -g -fsanitize=address
+CFLAGS = -g #-fsanitize=thread
 
 LINKS = 
 INCLUDES = -I./include
