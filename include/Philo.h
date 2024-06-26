@@ -46,7 +46,7 @@ void		*routine(void *philos);
 void		create_philos_threads(t_philo *philosophers);
 void    	join_philos_threads(t_philo *philosophers);
 long int	get_time_in_ms();
-int			ft_sleep(long int sleep_time_in_ms, t_philo *new_philos);
+void		ft_sleep(long int sleep_time_in_ms);
 int			death_check(t_philo *new_philos);
 void		free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks);
 

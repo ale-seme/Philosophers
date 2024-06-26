@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/06/25 13:25:09 by ale           ########   odam.nl         */
+/*   Updated: 2024/06/22 17:16:51 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ void	initialize_data(t_program *p_data, int argc, char **argv)
 	pthread_mutex_init(&p_data->print_lock, NULL);
 	p_data->someone_died = false;
 }
-
 void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 {
 	int i;

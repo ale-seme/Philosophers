@@ -15,6 +15,19 @@ long int	get_time_in_ms()
 	return(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
+void	ft_sleep(long int sleep_time_in_ms)
+{
+	long int	start_time;
+	long int	time_passed;
+
+	start_time = get_time_in_ms();
+	time_passed = 0;
+	while(time_passed < sleep_time_in_ms)
+	{
+		usleep(50 *1000);
+		time_passed = get_time_in_ms() - start_time;
+	}
+}
 int	death_check(t_philo *new_philos)
 {
 	pthread_mutex_lock(&new_philos->data->death_lock);
@@ -30,28 +43,6 @@ int	death_check(t_philo *new_philos)
 	}
 	pthread_mutex_unlock(&new_philos->data->death_lock);
 	return (0);
-}
-
-int	ft_sleep(long int sleep_time_in_ms, t_philo*new_philos)
-{
-	long int	start_time;
-	long int	time_passed;
-
-	start_time = get_time_in_ms();
-	time_passed = 0;
-	while(time_passed < sleep_time_in_ms)
-	{
-		usleep(50 *1000);
-		time_passed = get_time_in_ms() - start_time;
-		// if (death_check(new_philos))
-		// {
-		// 	pthread_mutex_lock(&new_philos->meal_lock);
-		// 	new_philos->last_meal = new_philos->data->time_to_die;
-		// 	pthread_mutex_lock(&new_philos->meal_lock);
-		// }
-	}
-	return (0);
-
 }
 
 void free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks)
