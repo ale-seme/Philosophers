@@ -14,6 +14,7 @@ void *routine(void *philos)
 
 	pthread_mutex_lock(&new_philos->data->start_lock);
 	pthread_mutex_unlock(&new_philos->data->start_lock);
+	new_philos->last_meal = get_time_in_ms();
 	// while(!new_philos->data->synchronized)
 	// 	continue;
 	while (1)
@@ -45,17 +46,17 @@ void	create_philos_threads(t_philo *philosophers)
 	int i;
 
 	i = -1;
+	pthread_mutex_lock(&philosophers->data->start_lock);
 	while(++i < philosophers->data->n_filos)
 		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
 	i = 0;
 
 	philosophers->data->start_time = get_time_in_ms();
-	pthread_mutex_lock(&philosophers->data->start_lock);
-	while(i < philosophers->data->n_filos)
-	{
-		philosophers[i].last_meal = philosophers->data->start_time;
-		i++;
-	}
+	// while(i < philosophers->data->n_filos)
+	// {
+	// 	philosophers[i].last_meal = philosophers->data->start_time;
+	// 	i++;
+	// }
 	//philosophers->data->synchronized = true;
 	pthread_mutex_unlock(&philosophers->data->start_lock);
 }
