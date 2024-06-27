@@ -36,6 +36,8 @@ void *monitoring_routine(void *philos)
 	new_philos = (t_philo *)(philos);
 	// while(!new_philos->data->synchronized)
 	// 	continue;
+	pthread_mutex_lock(&new_philos->data->start_monitoring);
+	pthread_mutex_unlock(&new_philos->data->start_monitoring);
 	while(1)
 	{
 		i = 0;
@@ -77,7 +79,9 @@ int main(int argc, char **argv)
 		return (free_and_destroy(&p_data, philosophers, NULL), 1);
 	init_forks_and_philos(philosophers, forks, &p_data);
 	create_philos_threads(philosophers);
+	pthread_mutex_lock(&p_data.start_monitoring);
 	pthread_create(&monitor, NULL, &monitoring_routine, philosophers);
+	pthread_mutex_unlock(&p_data.start_monitoring);
 	pthread_join(monitor, NULL);
 	join_philos_threads(philosophers);
 	return (free(philosophers), free(forks), 0);

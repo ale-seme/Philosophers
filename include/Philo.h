@@ -17,6 +17,7 @@ typedef struct s_program
 	pthread_mutex_t	death_lock;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	start_lock;
+	pthread_mutex_t	start_monitoring;
 	bool			synchronized;
 	bool			someone_died;
 }	t_program;

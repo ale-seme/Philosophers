@@ -14,7 +14,9 @@ void *routine(void *philos)
 
 	pthread_mutex_lock(&new_philos->data->start_lock);
 	pthread_mutex_unlock(&new_philos->data->start_lock);
-	new_philos->last_meal = get_time_in_ms();
+	pthread_mutex_lock(&new_philos->meal_lock);
+	new_philos->last_meal = get_time_in_ms(); //should I use a lock then every time I deal with meals?
+	pthread_mutex_unlock(&new_philos->meal_lock);
 	// while(!new_philos->data->synchronized)
 	// 	continue;
 	while (1)
