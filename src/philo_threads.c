@@ -12,8 +12,10 @@ void *routine(void *philos)
 {
 	t_philo *new_philos = (t_philo *)(philos);
 
-	while(!new_philos->data->synchronized)
-		continue;
+	pthread_mutex_lock(&new_philos->data->start_lock);
+	pthread_mutex_unlock(&new_philos->data->start_lock);
+	// while(!new_philos->data->synchronized)
+	// 	continue;
 	while (1)
 	{
 		if (death_check(new_philos))
@@ -54,7 +56,7 @@ void	create_philos_threads(t_philo *philosophers)
 		philosophers[i].last_meal = philosophers->data->start_time;
 		i++;
 	}
-	philosophers->data->synchronized = true;
+	//philosophers->data->synchronized = true;
 	pthread_mutex_unlock(&philosophers->data->start_lock);
 }
 
