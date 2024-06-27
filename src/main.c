@@ -55,7 +55,7 @@ void *monitoring_routine(void *philos)
 		}
 		if (total_satisfaction == new_philos->data->n_filos)
 			return (set_satisfaction_reached(new_philos), NULL);
-		usleep(500);
+		usleep(200);
 	}
 	return (NULL);
 }

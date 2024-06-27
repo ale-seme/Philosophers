@@ -15,7 +15,7 @@ long int	get_time_in_ms()
 	return(tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
-void	ft_sleep(long int sleep_time_in_ms)
+void	ft_sleep(long int sleep_time_in_ms, t_philo *new_philos)
 {
 	long int	start_time;
 	long int	time_passed;
@@ -26,6 +26,8 @@ void	ft_sleep(long int sleep_time_in_ms)
 	{
 		usleep(2000);
 		time_passed = get_time_in_ms() - start_time;
+		if (death_check(new_philos))
+			break;
 	}
 }
 int	death_check(t_philo *new_philos)
