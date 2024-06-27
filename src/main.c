@@ -84,5 +84,5 @@ int main(int argc, char **argv)
 	pthread_mutex_unlock(&p_data.start_monitoring);
 	pthread_join(monitor, NULL);
 	join_philos_threads(philosophers);
-	return (free(philosophers), free(forks), 0);
+	return (free_and_destroy(&p_data, philosophers, forks), 0);
 }

@@ -56,6 +56,8 @@ void free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks)
 	{
 		pthread_mutex_destroy(&p_data->death_lock);
 		pthread_mutex_destroy(&p_data->print_lock);
+		pthread_mutex_destroy(&p_data->start_lock);
+		pthread_mutex_destroy(&p_data->start_monitoring);
 	}
 	if (philos)
 	{
