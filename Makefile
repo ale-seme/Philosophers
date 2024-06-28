@@ -1,11 +1,12 @@
 NAME = philo
 
-CFLAGS = -g -fsanitize=thread
+CFLAGS = -g
 
 LINKS = 
 INCLUDES = -I./include
 
-SRC = main.c initialization.c philo_threads.c utils.c philo_actions.c
+SRC = main.c initialization.c philo_threads.c utils.c philo_actions.c \
+		free_functions.c
 
 
 DIR_SRC = src

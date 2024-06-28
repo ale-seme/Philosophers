@@ -47,30 +47,4 @@ int	death_check(t_philo *new_philos)
 	return (0);
 }
 
-void free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks)
-{
-	int i;
-	
-	i = -1;
-	if (p_data)
-	{
-		pthread_mutex_destroy(&p_data->death_lock);
-		pthread_mutex_destroy(&p_data->print_lock);
-		pthread_mutex_destroy(&p_data->start_lock);
-		pthread_mutex_destroy(&p_data->start_monitoring);
-	}
-	if (philos)
-	{
-		while(++i < p_data->n_filos)
-			pthread_mutex_destroy(&philos[i].meal_lock);
-		free(philos);
-	}
-	i = -1;
-	if (forks)
-	{
-		while(++i < p_data->n_filos)
-			pthread_mutex_destroy(&forks[i].lock);
-		free(forks);
-	}
-}
 

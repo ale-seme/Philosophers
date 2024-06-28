@@ -70,13 +70,16 @@ int main(int argc, char **argv)
 
 	if (argc < 5 || argc > 6)
 		return (printf("not right amout of arguments given\n"), 1);
-	initialize_data(&p_data, argc, argv);
+	if (!initialize_data(&p_data, argc, argv))
+		return (1);
 	philosophers = malloc(sizeof(t_philo) * p_data.n_filos);
 	if (!philosophers)
 		return (free_and_destroy(&p_data, NULL, NULL), 1);
 	forks = malloc(sizeof(t_fork) * p_data.n_filos);
 	if (!forks)
 		return (free_and_destroy(&p_data, philosophers, NULL), 1);
+	p_data.all_philos = philosophers;//considering if good
+	p_data.all_forks = forks; //considering if important
 	init_forks_and_philos(philosophers, forks, &p_data);
 	create_philos_threads(philosophers);
 	pthread_mutex_lock(&p_data.start_monitoring);

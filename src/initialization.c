@@ -6,13 +6,13 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/06/27 23:56:05 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/06/28 14:50:45 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Philo.h"
 
-void	initialize_data(t_program *p_data, int argc, char **argv)
+int	initialize_data(t_program *p_data, int argc, char **argv)
 {
 	p_data->n_filos = atoi(argv[1]);
 	p_data->time_to_die = atoi(argv[2]);
@@ -23,13 +23,17 @@ void	initialize_data(t_program *p_data, int argc, char **argv)
 	else
 		p_data->meals_needed = -1;
 	//p_data->start_time = get_time_in_ms();
-	if (pthread_mutex_init(&p_data->death_lock, NULL) == -1 || \
-		pthread_mutex_init(&p_data->print_lock, NULL) == -1 || \
-		pthread_mutex_init(&p_data->start_lock, NULL) == -1 || \
-		pthread_mutex_init(&p_data->start_monitoring, NULL) == -1)
-			return (free_and_destroy(p_data, NULL, NULL));
+	if (pthread_mutex_init(&p_data->death_lock, NULL) == -1)
+		return (free_data_and_err(p_data, ERR_MUTEX_D, 0), 0);
+	if (pthread_mutex_init(&p_data->print_lock, NULL) == -1)
+		return (free_data_and_err(p_data, ERR_MUTEX_D, 1), 0);
+	if (pthread_mutex_init(&p_data->start_lock, NULL) == -1)
+		return (free_data_and_err(p_data, ERR_MUTEX_D, 2), 0);
+	if (pthread_mutex_init(&p_data->start_monitoring, NULL) == -1)
+		return (free_data_and_err(p_data, ERR_MUTEX_D, 3), 0);
 	p_data->synchronized = false;
 	p_data->someone_died = false;
+	return (1);
 }
 void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 {

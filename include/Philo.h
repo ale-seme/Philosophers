@@ -6,6 +6,12 @@
 #include <time.h>
 #include <sys/time.h>
 
+#define ERR_MUTEX_D "Error in mutex init in Data\n"
+#define ERR_MUTEX_FI "Error in mutex init in philos\n"
+#define ERR_MUTEX_FO "Error in mutex init in forks\n"
+
+
+
 typedef struct s_program
 {
 	int				n_filos;
@@ -20,6 +26,8 @@ typedef struct s_program
 	pthread_mutex_t	start_monitoring;
 	bool			synchronized;
 	bool			someone_died;
+	struct s_philo 		*all_philos;
+	struct s_fork		*all_forks;
 }	t_program;
 
 typedef struct s_fork
@@ -43,7 +51,7 @@ typedef struct s_philo
 	int				meals_eaten;
 }	t_philo;
 
-void		initialize_data(t_program *p_data, int argc, char **argv);
+int		initialize_data(t_program *p_data, int argc, char **argv);
 void		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);
 void		*routine(void *philos);
 void		create_philos_threads(t_philo *philosophers);
@@ -60,6 +68,6 @@ int	action_eating(t_philo *new_philos);
 int	action_sleeping(t_philo *new_philos);
 int	action_thinking(t_philo *new_philos);
 
+/*cleaning functions*/
 
-
-
+int	free_data_and_err(t_program *p_data, const char *error, int index);
