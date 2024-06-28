@@ -47,7 +47,10 @@ void *monitoring_routine(void *philos)
 			pthread_mutex_lock(&new_philos[i].meal_lock);
 			//printf("philo last meal %ld\n", new_philos[i].last_meal);
 			if (get_time_in_ms() - new_philos[i].last_meal >= new_philos[i].data->time_to_die)
+			{
+				printf("INFO %ld\n", new_philos[i].last_meal);
 				return (display_and_set_death(new_philos, i), NULL);
+			}
 			if (new_philos[i].satisfied)
 				total_satisfaction++;
 			pthread_mutex_unlock(&new_philos[i].meal_lock);
@@ -78,13 +81,13 @@ int main(int argc, char **argv)
 	forks = malloc(sizeof(t_fork) * p_data.n_filos);
 	if (!forks)
 		return (free_and_destroy(&p_data, philosophers, NULL), 1);
-	p_data.all_philos = philosophers;//considering if good
-	p_data.all_forks = forks; //considering if important
+	// p_data.all_philos = philosophers;//considering if good
+	// p_data.all_forks = forks; //considering if important
 	init_forks_and_philos(philosophers, forks, &p_data);
 	create_philos_threads(philosophers);
-	pthread_mutex_lock(&p_data.start_monitoring);
+	//pthread_mutex_lock(&p_data.start_monitoring);
 	pthread_create(&monitor, NULL, &monitoring_routine, philosophers);
-	pthread_mutex_unlock(&p_data.start_monitoring);
+	//pthread_mutex_unlock(&p_data.start_monitoring);
 	pthread_join(monitor, NULL);
 	join_philos_threads(philosophers);
 	return (free_and_destroy(&p_data, philosophers, forks), 0);

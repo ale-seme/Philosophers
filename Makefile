@@ -1,6 +1,6 @@
 NAME = philo
 
-CFLAGS = -g
+CFLAGS = -g 
 
 LINKS = 
 INCLUDES = -I./include

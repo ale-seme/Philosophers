@@ -61,6 +61,7 @@ void	create_philos_threads(t_philo *philosophers)
 	// }
 	//philosophers->data->synchronized = true;
 	pthread_mutex_unlock(&philosophers->data->start_lock);
+	usleep(300);
 }
 
 void    join_philos_threads(t_philo *philosophers)
