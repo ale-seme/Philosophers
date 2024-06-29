@@ -30,20 +30,20 @@ void	ft_sleep(long int sleep_time_in_ms, t_philo *new_philos)
 			break;
 	}
 }
-int	death_check(t_philo *new_philos)
+int	death_check(t_philo *self_philo)
 {
-	pthread_mutex_lock(&new_philos->data->death_lock);
-	if (new_philos->is_dead)
+	pthread_mutex_lock(&self_philo->death_lock);
+	if (self_philo->is_dead)
 	{
-		pthread_mutex_unlock(&new_philos->data->death_lock);
+		pthread_mutex_unlock(&self_philo->death_lock);
 		return (1);
 	}
-	if (new_philos->data->someone_died)
+	if (self_philo->someone_died)//here to focus
 	{
-		pthread_mutex_unlock(&new_philos->data->death_lock);
+		pthread_mutex_unlock(&self_philo->death_lock);
 		return (1);
 	}
-	pthread_mutex_unlock(&new_philos->data->death_lock);
+	pthread_mutex_unlock(&self_philo->death_lock);
 	return (0);
 }
 

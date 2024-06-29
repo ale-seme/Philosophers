@@ -12,14 +12,13 @@
 
 int	free_data_and_err(t_program *p_data, const char *error, int stop)
 {
-	pthread_mutex_t *data_mutexes[4];
+	pthread_mutex_t *data_mutexes[3];
 	int i;
 
 	i = 0;
-	data_mutexes[0] = &p_data->death_lock;
-	data_mutexes[1] = &p_data->print_lock;
-	data_mutexes[2] = &p_data->start_lock;
-	data_mutexes[3] = &p_data->start_monitoring;
+	data_mutexes[0] = &p_data->print_lock;
+	data_mutexes[1] = &p_data->start_lock;
+	data_mutexes[2] = &p_data->start_monitoring;
 	if (p_data)
 	{
 		while(i < stop)
@@ -40,7 +39,6 @@ void free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks)
 	i = -1;
 	if (p_data)
 	{
-		pthread_mutex_destroy(&p_data->death_lock);
 		pthread_mutex_destroy(&p_data->print_lock);
 		pthread_mutex_destroy(&p_data->start_lock);
 		pthread_mutex_destroy(&p_data->start_monitoring);

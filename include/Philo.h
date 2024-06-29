@@ -20,12 +20,12 @@ typedef struct s_program
 	int				time_to_sleep;
 	int				meals_needed;
 	long int		start_time;
-	pthread_mutex_t	death_lock;
+	//pthread_mutex_t	death_lock;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	start_lock;
 	pthread_mutex_t	start_monitoring;
 	bool			synchronized;
-	bool			someone_died;
+	//bool			someone_died;
 	struct s_philo 		*all_philos;
 	struct s_fork		*all_forks;
 }	t_program;
@@ -46,7 +46,9 @@ typedef struct s_philo
 	t_fork			*fork_left;
 	t_program*		data;
 	bool			is_dead;
+	bool			someone_died;
 	pthread_mutex_t meal_lock;
+	pthread_mutex_t	death_lock;
 	bool			satisfied;
 	int				meals_eaten;
 }	t_philo;
@@ -58,7 +60,7 @@ void		create_philos_threads(t_philo *philosophers);
 void    	join_philos_threads(t_philo *philosophers);
 long int	get_time_in_ms();
 void		ft_sleep(long int sleep_time_in_ms, t_philo *new_philos);
-int			death_check(t_philo *new_philos);
+int			death_check(t_philo *self_philo);
 void		free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks);
 
 /*philosophers actions*/

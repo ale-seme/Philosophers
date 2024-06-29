@@ -10,34 +10,34 @@
 
 void *routine(void *philos)
 {
-	t_philo *new_philos = (t_philo *)(philos);
+	t_philo *self_philo = (t_philo *)(philos);
 
-	pthread_mutex_lock(&new_philos->data->start_lock);
-	pthread_mutex_unlock(&new_philos->data->start_lock);
-	pthread_mutex_lock(&new_philos->meal_lock);
-	new_philos->last_meal = get_time_in_ms(); //should I use a lock then every time I deal with meals?
-	pthread_mutex_unlock(&new_philos->meal_lock);
+	pthread_mutex_lock(&self_philo->data->start_lock);
+	pthread_mutex_unlock(&self_philo->data->start_lock);
+	pthread_mutex_lock(&self_philo->meal_lock);
+	self_philo->last_meal = get_time_in_ms(); //should I use a lock then every time I deal with meals?
+	pthread_mutex_unlock(&self_philo->meal_lock);
 	// while(!new_philos->data->synchronized)
 	// 	continue;
 	while (1)
 	{
-		if (death_check(new_philos))
+		if (death_check(self_philo))
 			break;
-		if (!grabbing_forks_even(new_philos))
+		if (!grabbing_forks_even(self_philo))
 			break;
-		if (!grabbing_forks_odd(new_philos))
+		if (!grabbing_forks_odd(self_philo))
 			break;
-		if (death_check(new_philos))
+		if (death_check(self_philo))
 		{
-			pthread_mutex_unlock(&new_philos->fork_left->lock);
-			pthread_mutex_unlock(&new_philos->fork_right->lock);
+			pthread_mutex_unlock(&self_philo->fork_left->lock);
+			pthread_mutex_unlock(&self_philo->fork_right->lock);
 			break;
 		}
-		if (!action_eating(new_philos))
+		if (!action_eating(self_philo))
 			break ;
-		if (!action_sleeping(new_philos))
+		if (!action_sleeping(self_philo))
 			break ;
-		if (!action_thinking(new_philos))
+		if (!action_thinking(self_philo))
 			break ;
 	}
 	return (NULL);
@@ -52,7 +52,6 @@ void	create_philos_threads(t_philo *philosophers)
 	while(++i < philosophers->data->n_filos)
 		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
 	i = 0;
-
 	philosophers->data->start_time = get_time_in_ms();
 	// while(i < philosophers->data->n_filos)
 	// {

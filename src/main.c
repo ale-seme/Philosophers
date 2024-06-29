@@ -13,18 +13,28 @@ void	display_and_set_death(t_philo *new_philos, int i)
 	pthread_mutex_lock(&new_philos->data->print_lock);
 	printf("%ld philo n: %zu has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
 	pthread_mutex_unlock(&new_philos->data->print_lock);
-	pthread_mutex_lock(&new_philos[i].data->death_lock);
-	new_philos[i].is_dead = true;
-	new_philos[i].data->someone_died = true;
-	pthread_mutex_unlock(&new_philos[i].data->death_lock);
-	pthread_mutex_unlock(&new_philos[i].meal_lock);
+	i = -1;
+	while(++i < new_philos->data->n_filos)
+	{
+		pthread_mutex_lock(&new_philos[i].death_lock);
+		new_philos[i].is_dead = true;
+		pthread_mutex_unlock(&new_philos[i].death_lock);
+	}
+	//new_philos[i].someone_died = true;
+	//pthread_mutex_unlock(&new_philos[i].meal_lock);
 }
 
 void	set_satisfaction_reached(t_philo *new_philos)
 {
-	pthread_mutex_lock(&new_philos->data->death_lock);
-	new_philos->data->someone_died = true;
-	pthread_mutex_unlock(&new_philos->data->death_lock);
+	int	i;
+
+	i = -1;
+	while(++i < new_philos->data->n_filos)
+	{
+		pthread_mutex_lock(&new_philos[i].death_lock);
+		new_philos[i].is_dead = true; //here to focus
+		pthread_mutex_unlock(&new_philos->death_lock);
+	}
 }
 
 void *monitoring_routine(void *philos)
@@ -48,6 +58,7 @@ void *monitoring_routine(void *philos)
 			//printf("philo last meal %ld\n", new_philos[i].last_meal);
 			if (get_time_in_ms() - new_philos[i].last_meal >= new_philos[i].data->time_to_die)
 			{
+				pthread_mutex_unlock(&new_philos[i].meal_lock);
 				printf("INFO %ld\n", new_philos[i].last_meal);
 				return (display_and_set_death(new_philos, i), NULL);
 			}
