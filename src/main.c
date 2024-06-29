@@ -46,8 +46,8 @@ void *monitoring_routine(void *philos)
 	new_philos = (t_philo *)(philos);
 	// while(!new_philos->data->synchronized)
 	// 	continue;
-	pthread_mutex_lock(&new_philos->data->start_monitoring);
-	pthread_mutex_unlock(&new_philos->data->start_monitoring);
+	// pthread_mutex_lock(&new_philos->data->start_monitoring);
+	// pthread_mutex_unlock(&new_philos->data->start_monitoring);
 	while(1)
 	{
 		i = 0;
