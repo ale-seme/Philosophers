@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/06/28 14:50:45 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/06/28 17:32:39 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 		philos[i].f_id = i + 1;
 		philos[i].data = p_data;
 		philos[i].fork_left = &forks[i];
-		//philos[i].last_meal = p_data->start_time;
+		philos[i].last_meal = get_time_in_ms();
 		philos[i].meals_eaten = 0;
 		philos[i].satisfied = false;
 		if (p_data->n_filos == 1)
