@@ -10,9 +10,9 @@
 
 void	display_and_set_death(t_philo *new_philos, int i)
 {
-	pthread_mutex_lock(&new_philos->data->print_lock);
+	//pthread_mutex_lock(&new_philos->data->print_lock);
 	printf("%ld philo n: %zu has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
-	pthread_mutex_unlock(&new_philos->data->print_lock);
+	//pthread_mutex_unlock(&new_philos->data->print_lock);
 	i = -1;
 	while(++i < new_philos->data->n_filos)
 	{
@@ -59,7 +59,7 @@ void *monitoring_routine(void *philos)
 			if (get_time_in_ms() - new_philos[i].last_meal >= new_philos[i].data->time_to_die)
 			{
 				pthread_mutex_unlock(&new_philos[i].meal_lock);
-				printf("INFO %ld\n", new_philos[i].last_meal);
+				//printf("INFO %ld\n", new_philos[i].last_meal);
 				return (display_and_set_death(new_philos, i), NULL);
 			}
 			if (new_philos[i].satisfied)

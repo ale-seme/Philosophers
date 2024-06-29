@@ -38,11 +38,11 @@ int	death_check(t_philo *self_philo)
 		pthread_mutex_unlock(&self_philo->death_lock);
 		return (1);
 	}
-	if (self_philo->someone_died)//here to focus
-	{
-		pthread_mutex_unlock(&self_philo->death_lock);
-		return (1);
-	}
+	// if (self_philo->someone_died)//here to focus
+	// {
+	// 	pthread_mutex_unlock(&self_philo->death_lock);
+	// 	return (1);
+	// }
 	pthread_mutex_unlock(&self_philo->death_lock);
 	return (0);
 }
