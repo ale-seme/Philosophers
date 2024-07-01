@@ -53,7 +53,7 @@ typedef struct s_philo
 	int				meals_eaten;
 }	t_philo;
 
-int		initialize_data(t_program *p_data, int argc, char **argv);
+int			initialize_data(t_program *p_data, int argc, char **argv);
 void		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);
 void		*routine(void *philos);
 void		create_philos_threads(t_philo *philosophers);

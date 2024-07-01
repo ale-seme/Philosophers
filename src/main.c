@@ -32,9 +32,8 @@ void	set_satisfaction_reached(t_philo *new_philos)
 	while(++i < new_philos->data->n_filos)
 	{
 		pthread_mutex_lock(&new_philos[i].death_lock);
-		printf("setting satisfaction reached\n");
 		new_philos[i].is_dead = true; //here to focus
-		pthread_mutex_unlock(&new_philos->death_lock);
+		pthread_mutex_unlock(&new_philos[i].death_lock);
 	}
 }
 
