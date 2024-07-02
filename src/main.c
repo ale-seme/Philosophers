@@ -82,8 +82,8 @@ int main(int argc, char **argv)
 	pthread_t			monitor;
 	int					i;
 
-	if (argc < 5 || argc > 6)
-		return (printf("not right amout of arguments given\n"), 1);
+	if (!correct_arguments(argc, argv))
+		return (1);
 	if (!initialize_data(&p_data, argc, argv))
 		return (1);
 	philosophers = malloc(sizeof(t_philo) * p_data.n_filos);
