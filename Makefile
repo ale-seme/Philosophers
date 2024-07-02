@@ -26,7 +26,7 @@ ${OBJ}: ${DIR_OBJ}/%.o: ${DIR_SRC}/%.c
 	${CC} ${CFLAGS} ${INCLUDES} -c $< -o $@
 
 clean:
-	rm -f ${OBJ}
+	rm -f ${OBJ} rm -d ${DIR_OBJ}
 
 fclean: clean
 	rm -f ${NAME}
