@@ -19,6 +19,8 @@ void *routine(void *philos)
 	pthread_mutex_unlock(&self_philo->meal_lock);
 	// while(!new_philos->data->synchronized)
 	// 	continue;
+	if (self_philo->data->n_filos % 2 == 0 && self_philo->f_id == self_philo->data->n_filos)
+		ft_sleep(1, self_philo);
 	while (1)
 	{
 		if (death_check(self_philo))

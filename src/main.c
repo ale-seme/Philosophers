@@ -11,7 +11,7 @@
 void	display_and_set_death(t_philo *new_philos, long i)
 {
 	//pthread_mutex_lock(&new_philos->data->print_lock);
-	printf("%ld philo n: %zu has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
+	printf("%ld %zu has died\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
 	//pthread_mutex_unlock(&new_philos->data->print_lock);
 	i = -1;
 	while(++i < new_philos->data->n_filos)
@@ -44,6 +44,7 @@ void *monitoring_routine(void *philos)
 	long	total_satisfaction;
 
 	new_philos = (t_philo *)(philos);
+	ft_sleep(25, new_philos);
 	// while(!new_philos->data->synchronized)
 	// 	continue;
 	// pthread_mutex_lock(&new_philos->data->start_monitoring);
@@ -69,7 +70,7 @@ void *monitoring_routine(void *philos)
 		}
 		if (total_satisfaction == new_philos->data->n_filos)
 			return (set_satisfaction_reached(new_philos), NULL);
-		usleep(200);
+		ft_sleep(200, new_philos);
 	}
 	return (NULL);
 }

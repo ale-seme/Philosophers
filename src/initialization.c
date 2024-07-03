@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/03 12:58:17 by ale           ########   odam.nl         */
+/*   Updated: 2024/07/03 21:10:25 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 		philos[i].f_id = i + 1;
 		philos[i].data = p_data;
 		philos[i].fork_left = &forks[i];
-		philos[i].last_meal = get_time_in_ms();
+		philos[i].last_meal = get_time_in_ms(); //I keep it in case would take > 25ms to create and start philos
 		philos[i].meals_eaten = 0;
 		philos[i].is_dead = false;
 		philos[i].someone_died = false;

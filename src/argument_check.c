@@ -64,6 +64,5 @@ long    simple_atoi(char *argv)
         number = number *10 + (argv[i] - '0');
         i++;
     }
-    printf("argument converted %ld\n", number);
     return (number);
 }
