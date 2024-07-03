@@ -97,7 +97,6 @@ int	action_thinking(t_philo *new_philos)
 	pthread_mutex_lock(&new_philos->data->print_lock);
 	printf("%ld philo n :%zu is thinking\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
 	pthread_mutex_unlock(&new_philos->data->print_lock);
-	if (new_philos->data->n_filos %2 != 0)
-		ft_sleep(60, new_philos);
+	ft_sleep(1, new_philos);
 	return (1);
 }
