@@ -13,7 +13,7 @@
 int	free_data_and_err(t_program *p_data, const char *error, int stop)
 {
 	pthread_mutex_t *data_mutexes[3];
-	int i;
+	long	i;
 
 	i = 0;
 	data_mutexes[0] = &p_data->print_lock;
@@ -34,7 +34,7 @@ int	free_data_and_err(t_program *p_data, const char *error, int stop)
 
 void free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks)
 {
-	int i;
+	long	i;
 	
 	i = -1;
 	if (p_data)

@@ -46,22 +46,24 @@ int correct_arguments(int argc, char **argv)
     return (1);
 }
 
-int simple_atoi(char *argv)
+long    simple_atoi(char *argv)
 {
-    long long int number;
+    long number;
+
+    number = 0;
     int i = 0;
 
-    while(argv[i++])
+    while(argv[i])
     {
-        while(argv[i])
+        
+        if (number > (LONG_MAX - (argv[i] - '0')) / 10)
         {
-            number = number *10 + (argv[i] + '0');
-            if (number > LONG_MAX)
-            {
-                printf("The simulation accepts till LONG_MAX\n");
-                return (0);
-            }
+            printf("The simulation accepts numbers till LONG_MAX\n");
+            return (0);
         }
+        number = number *10 + (argv[i] - '0');
+        i++;
     }
+    printf("argument converted %ld\n", number);
     return (number);
 }

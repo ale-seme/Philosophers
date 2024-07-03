@@ -8,7 +8,7 @@
 #include "Philo.h"
 
 
-void	display_and_set_death(t_philo *new_philos, int i)
+void	display_and_set_death(t_philo *new_philos, long i)
 {
 	//pthread_mutex_lock(&new_philos->data->print_lock);
 	printf("%ld philo n: %zu has DIED\n", get_time_in_ms() - new_philos[i].data->start_time, new_philos[i].f_id);
@@ -26,7 +26,7 @@ void	display_and_set_death(t_philo *new_philos, int i)
 
 void	set_satisfaction_reached(t_philo *new_philos)
 {
-	int	i;
+	long	i;
 
 	i = -1;
 	while(++i < new_philos->data->n_filos)
@@ -40,8 +40,8 @@ void	set_satisfaction_reached(t_philo *new_philos)
 void *monitoring_routine(void *philos)
 {
 	t_philo *new_philos;
-	int i;
-	int	total_satisfaction;
+	long	i;
+	long	total_satisfaction;
 
 	new_philos = (t_philo *)(philos);
 	// while(!new_philos->data->synchronized)
@@ -80,7 +80,7 @@ int main(int argc, char **argv)
 	t_philo				*philosophers;
 	t_fork				*forks;
 	pthread_t			monitor;
-	int					i;
+	long				i;
 
 	if (!correct_arguments(argc, argv))
 		return (1);

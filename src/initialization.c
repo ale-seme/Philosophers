@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/02 22:58:54 by ale           ########   odam.nl         */
+/*   Updated: 2024/07/03 12:58:17 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 int	initialize_data(t_program *p_data, int argc, char **argv)
 {
-	p_data->n_filos = atoi(argv[1]);
-	p_data->time_to_die = atoi(argv[2]);
-	p_data->time_to_eat = atoi(argv[3]);
-	p_data->time_to_sleep = atoi(argv[4]);
+	p_data->n_filos = simple_atoi(argv[1]);
+	p_data->time_to_die = simple_atoi(argv[2]);
+	p_data->time_to_eat = simple_atoi(argv[3]);
+	p_data->time_to_sleep = simple_atoi(argv[4]);
 	if (argc == 6)
-		p_data->meals_needed = atoi(argv[5]);
+		p_data->meals_needed = simple_atoi(argv[5]);
 	else
 		p_data->meals_needed = -1;
 	//p_data->start_time = get_time_in_ms();
@@ -37,7 +37,7 @@ int	initialize_data(t_program *p_data, int argc, char **argv)
 }
 void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 {
-	int i;
+	long	i;
 	
 	i = -1;
 	while(++i < p_data->n_filos)

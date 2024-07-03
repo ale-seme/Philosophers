@@ -14,12 +14,12 @@
 
 typedef struct s_program
 {
-	int				n_filos;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				meals_needed;
-	long int		start_time;
+	long			n_filos;
+	long			time_to_die;
+	long			time_to_eat;
+	long			time_to_sleep;
+	long			meals_needed;
+	long			start_time;
 	//pthread_mutex_t	death_lock;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	start_lock;
@@ -40,7 +40,7 @@ typedef struct s_philo
 	
 	size_t			f_id;
 	struct timeval	tv;
-	long int		last_meal;
+	long			last_meal;
 	pthread_t		thread;
 	t_fork			*fork_right;
 	t_fork			*fork_left;
@@ -50,11 +50,13 @@ typedef struct s_philo
 	pthread_mutex_t meal_lock;
 	pthread_mutex_t	death_lock;
 	bool			satisfied;
-	int				meals_eaten;
+	long			meals_eaten;
 }	t_philo;
 
 /*argument checking*/
 int			correct_arguments(int argc, char **argv);
+long		simple_atoi(char *argv);
+
 
 int			initialize_data(t_program *p_data, int argc, char **argv);
 void		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);

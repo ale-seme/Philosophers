@@ -45,7 +45,7 @@ void *routine(void *philos)
 
 void	create_philos_threads(t_philo *philosophers)
 {
-	int i;
+	long	i;
 
 	i = -1;
 	pthread_mutex_lock(&philosophers->data->start_lock);
@@ -65,7 +65,7 @@ void	create_philos_threads(t_philo *philosophers)
 
 void    join_philos_threads(t_philo *philosophers)
 {
-	int i;
+	long	i;
 
 	i = -1;
 	while(++i < philosophers->data->n_filos)
