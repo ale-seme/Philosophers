@@ -24,7 +24,7 @@ void	ft_sleep(long int sleep_time_in_ms, t_philo *new_philos)
 	time_passed = 0;
 	while(time_passed < sleep_time_in_ms)
 	{
-		usleep(2000);
+		usleep(1000);
 		time_passed = get_time_in_ms() - start_time;
 		if (death_check(new_philos))
 			break;
