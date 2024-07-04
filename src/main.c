@@ -7,6 +7,7 @@
 #include <sys/time.h>
 #include "Philo.h"
 
+//strace -f -e trace=futex -tt -T -o strace_output ./philo
 
 void	display_and_set_death(t_philo *new_philos, long i)
 {
@@ -98,7 +99,9 @@ int main(int argc, char **argv)
 	init_forks_and_philos(philosophers, forks, &p_data);
 	create_philos_threads(philosophers);
 	//pthread_mutex_lock(&p_data.start_monitoring);
+
 	pthread_create(&monitor, NULL, &monitoring_routine, philosophers);
+
 	//pthread_mutex_unlock(&p_data.start_monitoring);
 	pthread_join(monitor, NULL);
 	join_philos_threads(philosophers);
