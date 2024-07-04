@@ -6,13 +6,23 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/03 21:10:25 by ale           ########   odam.nl         */
+/*   Updated: 2024/07/04 22:56:54 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Philo.h"
 
-int	initialize_data(t_program *p_data, int argc, char **argv)
+int	atoi_is_overflow(t_program *p_data)
+{
+	if (p_data->n_filos == 0 \
+		|| p_data->time_to_die == 0 \
+		|| p_data->time_to_eat == 0 || p_data->time_to_sleep == 0 \
+		|| p_data->meals_needed == 0)
+		return (1);
+	return (0);
+}
+
+int	initialize_data(t_program *p_data, int argc, char **argv)//need to implement a way to break if 0 from atoi is met
 {
 	p_data->n_filos = simple_atoi(argv[1]);
 	p_data->time_to_die = simple_atoi(argv[2]);
@@ -22,6 +32,8 @@ int	initialize_data(t_program *p_data, int argc, char **argv)
 		p_data->meals_needed = simple_atoi(argv[5]);
 	else
 		p_data->meals_needed = -1;
+	if (atoi_is_overflow(p_data))
+		return (0);
 	//p_data->start_time = get_time_in_ms();
 	// if (pthread_mutex_init(&p_data->death_lock, NULL) == -1)
 	// 	return (free_data_and_err(p_data, ERR_MUTEX_D, 0), 0);
