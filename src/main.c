@@ -59,13 +59,13 @@ void	set_satisfaction_reached(t_philo *new_philos)
 	}
 }
 
-void *monitoring_routine(void *philos)
+void monitoring_function(t_philo *new_philos)
 {
-	t_philo *new_philos;
+	//t_philo *new_philos;
 	long	i;
 	long	total_satisfaction;
 
-	new_philos = (t_philo *)(philos);
+	///new_philos = (t_philo *)(philos);
 	//ft_sleep(1, new_philos);
 	// while(!new_philos->data->synchronized)
 	// 	continue;
@@ -85,7 +85,7 @@ void *monitoring_routine(void *philos)
 			{
 				pthread_mutex_unlock(&new_philos[i].meal_lock);
 				//printf("INFO %ld\n", new_philos[i].last_meal);
-				return (display_and_set_death(new_philos, i), NULL);
+				return (display_and_set_death(new_philos, i));
 			}
 			if (new_philos[i].satisfied)
 				total_satisfaction++;
@@ -93,10 +93,10 @@ void *monitoring_routine(void *philos)
 			i++;
 		}
 		if (total_satisfaction == new_philos->data->n_filos)
-			return (set_satisfaction_reached(new_philos), NULL);
+			return (set_satisfaction_reached(new_philos));
 		usleep(200);
 	}
-	return (NULL);
+	return;
 }
 
 int main(int argc, char **argv)
@@ -122,10 +122,10 @@ int main(int argc, char **argv)
 	// p_data.all_forks = forks; //considering if important
 	init_forks_and_philos(philosophers, forks, &p_data);
 	create_philos_threads(philosophers);
+	//pthread_mutex_lock(&p_data.start_monitoring);
 
-	pthread_create(&monitor, NULL, &monitoring_routine, philosophers);
-
-	pthread_join(monitor, NULL);
+	monitoring_function(philosophers);
+	//pthread_join(monitor, NULL);
 	join_philos_threads(philosophers);
 	return (free_and_error(&p_data, philosophers, forks, NULL), 0);
 }
