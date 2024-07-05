@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/05 14:31:13 by ale           ########   odam.nl         */
+/*   Updated: 2024/07/05 22:34:35 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,6 @@ int	initialize_data(t_program *p_data, int argc, char **argv)
 		return (free_data_and_err(p_data, ERR_MUTEX_D, 0), 0);
 	if (pthread_mutex_init(&p_data->start_lock, NULL) == -1)
 		return (free_data_and_err(p_data, ERR_MUTEX_D, 1), 0);
-	if (pthread_mutex_init(&p_data->start_monitoring, NULL) == -1)
-		return (free_data_and_err(p_data, ERR_MUTEX_D, 2), 0);
 	p_data->synchronized = false;
 	//p_data->someone_died = false;
 	return (1);

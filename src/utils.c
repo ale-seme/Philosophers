@@ -7,6 +7,19 @@
 #include <sys/time.h>
 #include "Philo.h"
 
+void	display_error(char *error)
+{
+	int	i;
+
+	i = 0;
+	if (error)
+	{
+		while(error[i])
+			i++;
+		write(2, error, i);
+	}
+}
+
 long int	get_time_in_ms()
 {
 	struct	timeval tv;

@@ -12,13 +12,12 @@
 
 int	free_data_and_err(t_program *p_data, const char *error, int stop)
 {
-	pthread_mutex_t *data_mutexes[3];
+	pthread_mutex_t *data_mutexes[2];
 	long	i;
 
 	i = 0;
 	data_mutexes[0] = &p_data->print_lock;
 	data_mutexes[1] = &p_data->start_lock;
-	data_mutexes[2] = &p_data->start_monitoring;
 	if (p_data)
 	{
 		while(i < stop)
@@ -32,17 +31,16 @@ int	free_data_and_err(t_program *p_data, const char *error, int stop)
 	return (1);
 }
 
-void free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks)
+void free_and_error(t_program *p_data, t_philo *philos, t_fork *forks, char *err)
 {
 	long	i;
 	
-	i = -1;
 	if (p_data)
 	{
 		pthread_mutex_destroy(&p_data->print_lock);
 		pthread_mutex_destroy(&p_data->start_lock);
-		pthread_mutex_destroy(&p_data->start_monitoring);
 	}
+	i = -1;
 	if (philos)
 	{
 		while(++i < p_data->n_filos)
@@ -56,4 +54,5 @@ void free_and_destroy(t_program *p_data, t_philo *philos, t_fork *forks)
 			pthread_mutex_destroy(&forks[i].lock);
 		free(forks);
 	}
+	display_error(err);
 }
