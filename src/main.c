@@ -94,7 +94,7 @@ void *monitoring_routine(void *philos)
 		}
 		if (total_satisfaction == new_philos->data->n_filos)
 			return (set_satisfaction_reached(new_philos), NULL);
-		ft_sleep(200, new_philos);
+		usleep(200);
 	}
 	return (NULL);
 }
