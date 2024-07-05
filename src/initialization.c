@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/04 22:56:54 by ale           ########   odam.nl         */
+/*   Updated: 2024/07/05 14:31:13 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	atoi_is_overflow(t_program *p_data)
 	return (0);
 }
 
-int	initialize_data(t_program *p_data, int argc, char **argv)//need to implement a way to break if 0 from atoi is met
+int	initialize_data(t_program *p_data, int argc, char **argv)
 {
 	p_data->n_filos = simple_atoi(argv[1]);
 	p_data->time_to_die = simple_atoi(argv[2]);
