@@ -114,18 +114,14 @@ int main(int argc, char **argv)
 	philosophers = malloc(sizeof(t_philo) * p_data.n_filos);
 	if (!philosophers)
 		return (free_and_error(&p_data, NULL, NULL, ERR_MALLOC_FI), 1);
-		
 	forks = malloc(sizeof(t_fork) * p_data.n_filos);
 	if (!forks)
 		return (free_and_error(&p_data, philosophers, NULL, ERR_MALLOC_FO), 1);
-	// p_data.all_philos = philosophers;//considering if good
-	// p_data.all_forks = forks; //considering if important
-	init_forks_and_philos(philosophers, forks, &p_data);
-	create_philos_threads(philosophers);
-	//pthread_mutex_lock(&p_data.start_monitoring);
-
+	if (!init_forks_and_philos(philosophers, forks, &p_data))
+		return (1);
+	if (!create_philos_threads(philosophers))
+		return (destroy_free_and_error(philosophers, forks, 4, p_data.n_filos), 1);
 	monitoring_function(philosophers);
-	//pthread_join(monitor, NULL);
 	join_philos_threads(philosophers);
-	return (free_and_error(&p_data, philosophers, forks, NULL), 0);
+	return (destroy_free_and_error(philosophers, forks, 4, p_data.n_filos), 0);
 }

@@ -45,23 +45,21 @@ void *routine(void *philos)
 	return (NULL);
 }
 
-void	create_philos_threads(t_philo *philosophers)
+int	create_philos_threads(t_philo *philosophers)
 {
 	long	i;
 
 	i = -1;
 	pthread_mutex_lock(&philosophers->data->start_lock);
 	while(++i < philosophers->data->n_filos)
-		pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]);
+	{
+		if (pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]) == -1)
+			return(detach_and_error(philosophers, i, ERR_THREAD_F), 0);
+	}
 	i = 0;
 	philosophers->data->start_time = get_time_in_ms();
-	// while(i < philosophers->data->n_filos)
-	// {
-	// 	philosophers[i].last_meal = philosophers->data->start_time;
-	// 	i++;
-	// }
-	//philosophers->data->synchronized = true;
 	pthread_mutex_unlock(&philosophers->data->start_lock);
+	return (1);
 	//usleep(1000);
 }
 

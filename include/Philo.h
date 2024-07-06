@@ -9,8 +9,8 @@
 #define ERR_MUTEX_D "Error in mutex init in Data\n"
 #define ERR_MALLOC_FI "Error in malloc philosophers\n"
 #define ERR_MALLOC_FO "Error in malloc forks\n"
-#define ERR_MUTEX_FI "Error in mutex init in philos\n"
-#define ERR_MUTEX_FO "Error in mutex init in forks\n"
+#define ERR_MUTEX_INIT "Error during the init_forks_and_philos\n"
+#define ERR_THREAD_F "Error during the creation of a philo thread\n"
 
 
 
@@ -58,9 +58,9 @@ long		simple_atoi(char *argv);
 
 
 int			initialize_data(t_program *p_data, int argc, char **argv);
-void		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);
+int			init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);
 void		*routine(void *philos);
-void		create_philos_threads(t_philo *philosophers);
+int			create_philos_threads(t_philo *philosophers);
 void    	join_philos_threads(t_philo *philosophers);
 long int	get_time_in_ms();
 void		ft_sleep(long int sleep_time_in_ms, t_philo *new_philos);
@@ -76,5 +76,7 @@ int	action_thinking(t_philo *new_philos);
 
 /*cleaning functions*/
 
-int		free_data_and_err(t_program *p_data, const char *error, int index);
+void	free_data_and_err(t_program *p_data, const char *error, int index);
 void	display_error(char *error);
+void	destroy_free_and_error(t_philo *philos, t_fork *forks, long n, long stop);
+void	detach_and_error(t_philo *philosophers, long stop, char *err);

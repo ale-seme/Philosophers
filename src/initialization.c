@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/05 22:34:35 by ale           ########   odam.nl         */
+/*   Updated: 2024/07/06 17:03:38 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ int	initialize_data(t_program *p_data, int argc, char **argv)
 	//p_data->someone_died = false;
 	return (1);
 }
-void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
+int	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 {
 	long	i;
 	
@@ -66,9 +66,14 @@ void	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 			philos[i].fork_right = &forks[p_data->n_filos - 1];
 		else
 			philos[i].fork_right = &forks[i - 1];
-		pthread_mutex_init(&philos[i].meal_lock, NULL);
-		pthread_mutex_init(&philos[i].death_lock, NULL);
-		pthread_mutex_init(&forks[i].lock, NULL);
+			
+		if (pthread_mutex_init(&philos[i].meal_lock, NULL) == -1)
+			return (destroy_free_and_error(philos, forks, 0, i), 0);
+		if (pthread_mutex_init(&philos[i].death_lock, NULL) == -1)
+			return (destroy_free_and_error(philos, forks, 1, i), 0);
+		if (pthread_mutex_init(&forks[i].lock, NULL) == -1)
+			return (destroy_free_and_error(philos, forks, 2, i), 0);
 	}
+	return (1);
 }
 
