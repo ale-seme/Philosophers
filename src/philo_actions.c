@@ -99,6 +99,6 @@ int	action_thinking(t_philo *new_philos)
 	printf("%ld %zu is thinking\n", get_time_in_ms() - new_philos->data->start_time, new_philos->f_id);
 	pthread_mutex_unlock(&new_philos->data->print_lock);
 	if ((new_philos->data->time_to_die - (2 * new_philos->data->time_to_eat) - new_philos->data->time_to_sleep) > 0) //store this value and this is the amount to sleep
-		ft_sleep(2, new_philos); //TRY TO TEST BACK 1MS BUT FROM CODAM PC
+		ft_sleep(new_philos->data->time_to_die - (2 * new_philos->data->time_to_eat) - new_philos->data->time_to_sleep, new_philos); //TRY TO TEST BACK 1MS BUT FROM CODAM PC
 	return (1);
 }

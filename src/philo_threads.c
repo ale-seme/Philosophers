@@ -19,8 +19,14 @@ void *routine(void *philos)
 	pthread_mutex_unlock(&self_philo->meal_lock);
 	// while(!new_philos->data->synchronized)
 	// 	continue;
-	if (self_philo->data->n_filos % 2 == 0 && self_philo->f_id == self_philo->data->n_filos)
-		ft_sleep(1, self_philo);
+	// if (self_philo->data->n_filos % 2 == 0 && self_philo->f_id == self_philo->data->n_filos)
+	// 	ft_sleep(1, self_philo);
+	if (self_philo->f_id % 2 == 0)
+	{
+		ft_sleep(self_philo->data->time_to_eat /2, self_philo);
+		if (death_check(self_philo))
+			return NULL;
+	}
 	while (1)
 	{
 		if (death_check(self_philo))
