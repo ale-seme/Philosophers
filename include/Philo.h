@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:26:27 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/09 12:06:39 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/09 15:34:48 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,8 @@ typedef struct s_program
 	long			time_to_sleep;
 	long			meals_needed;
 	long			start_time;
-	bool			synchronized;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	start_lock;
-	struct s_philo		*all_philos;
-	struct s_fork		*all_forks;
 }	t_program;
 
 typedef struct s_fork

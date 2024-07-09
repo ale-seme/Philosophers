@@ -6,10 +6,9 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:26:08 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/09 12:59:22 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/09 16:04:18 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include <unistd.h>
 #include <stdio.h>
@@ -43,14 +42,14 @@ void	display_and_set_death(t_philo *new_philos, long i)
 	flag = 0;
 	i = -1;
 	start_time = get_time_in_ms();
-
-	while(++i < new_philos->data->n_filos)
+	while (++i < new_philos->data->n_filos)
 	{
 		if (!flag && (get_time_in_ms() - start_time > 9))
 		{
 			flag = 1;
 			pthread_mutex_lock(&new_philos->data->print_lock);
-			printf("%ld %zu died\n", get_time_in_ms() - new_philos[n].data->start_time, new_philos[n].f_id);
+			printf("%ld %zu died\n", get_time_in_ms() - \
+				new_philos[n].data->start_time, new_philos[n].f_id);
 			pthread_mutex_unlock(&new_philos->data->print_lock);
 		}
 		pthread_mutex_lock(&new_philos[i].death_lock);
@@ -66,20 +65,20 @@ void	set_satisfaction_reached(t_philo *new_philos)
 	long	i;
 
 	i = -1;
-	while(++i < new_philos->data->n_filos)
+	while (++i < new_philos->data->n_filos)
 	{
 		pthread_mutex_lock(&new_philos[i].death_lock);
-		new_philos[i].is_dead = true; //here to focus
+		new_philos[i].is_dead = true;
 		pthread_mutex_unlock(&new_philos[i].death_lock);
 	}
 }
 
-void monitoring_function(t_philo *new_philos)
+void	monitoring_function(t_philo *new_philos)
 {
 	long	i;
 	long	total_satisfaction;
 
-	while(1)
+	while (1)
 	{
 		i = -1;
 		total_satisfaction = 0;

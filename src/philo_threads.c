@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:50 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/09 12:09:39 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/09 15:26:50 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,21 +40,15 @@ void *routine(void *philos)
 	{
 		if (death_check(self_philo))
 			break;
-		if (!grabbing_forks_even(self_philo))
-			break;
-		if (!grabbing_forks_odd(self_philo))
+		if (!grabbing_forks_even(self_philo) || !grabbing_forks_odd(self_philo))
 			break;
 		if (death_check(self_philo))
 		{
-			pthread_mutex_unlock(&self_philo->fork_left->lock);
-			pthread_mutex_unlock(&self_philo->fork_right->lock);
-			break;
+			return (pthread_mutex_unlock(&self_philo->fork_left->lock), \
+			pthread_mutex_unlock(&self_philo->fork_right->lock), NULL);
 		}
-		if (!action_eating(self_philo))
-			break ;
-		if (!action_sleeping(self_philo))
-			break ;
-		if (!action_thinking(self_philo))
+		if (!action_eating(self_philo) || !action_sleeping(self_philo)
+			|| action_thinking(self_philo))
 			break ;
 	}
 	return (NULL);
@@ -68,7 +62,8 @@ int	create_philos_threads(t_philo *philosophers)
 	pthread_mutex_lock(&philosophers->data->start_lock);
 	while(++i < philosophers->data->n_filos)
 	{
-		if (pthread_create(&philosophers[i].thread, NULL, &routine, &philosophers[i]) == -1)
+		if (pthread_create(&philosophers[i].thread, NULL, &routine, \
+			 &philosophers[i]) == -1)
 			return(detach_and_error(philosophers, i, ERR_THREAD_F), 0);
 	}
 	i = 0;
