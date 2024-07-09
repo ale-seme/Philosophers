@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:42 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/09 12:46:02 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/09 20:55:43 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	grabbing_forks_even(t_philo *new_philos)
 		}
 		pthread_mutex_lock(&new_philos->data->print_lock);
 		printf("%ld %zu has taken a fork\n", get_time_in_ms() - \
-			 new_philos->data->start_time, new_philos->f_id);
+			new_philos->data->start_time, new_philos->f_id);
 		pthread_mutex_unlock(&new_philos->data->print_lock);
 		pthread_mutex_lock(&new_philos->fork_left->lock);
 		if (death_check(new_philos))
@@ -54,7 +54,7 @@ int	grabbing_forks_odd(t_philo *new_philos)
 	{
 		pthread_mutex_lock(&new_philos->fork_left->lock);
 		if (death_check(new_philos))
-			return(pthread_mutex_unlock(&new_philos->fork_left->lock), 0);
+			return (pthread_mutex_unlock(&new_philos->fork_left->lock), 0);
 		pthread_mutex_lock(&new_philos->data->print_lock);
 		printf("%ld %zu has taken a fork\n", get_time_in_ms() - \
 			new_philos->data->start_time, new_philos->f_id);
@@ -71,7 +71,7 @@ int	grabbing_forks_odd(t_philo *new_philos)
 				pthread_mutex_unlock(&new_philos->fork_left->lock), 0);
 		pthread_mutex_lock(&new_philos->data->print_lock);
 		printf("%ld %zu has taken a fork\n", get_time_in_ms() - \
-			 new_philos->data->start_time, new_philos->f_id);
+			new_philos->data->start_time, new_philos->f_id);
 		pthread_mutex_unlock(&new_philos->data->print_lock);
 	}
 	return (1);
@@ -85,7 +85,6 @@ int	action_eating(t_philo *new_philos)
 	printf("%ld %zu is eating\n", get_time_in_ms() - \
 		new_philos->data->start_time, new_philos->f_id);
 	pthread_mutex_unlock(&new_philos->data->print_lock);
-
 	pthread_mutex_lock(&new_philos->meal_lock);
 	new_philos->last_meal = get_time_in_ms();
 	new_philos->meals_eaten++;
@@ -110,17 +109,18 @@ int	action_sleeping(t_philo *new_philos)
 	ft_sleep(new_philos->data->time_to_sleep, new_philos);
 	return (1);
 }
+
 int	action_thinking(t_philo *new_philos)
 {
 	long	difference;
-	
+
 	if (death_check(new_philos))
 		return (0);
 	pthread_mutex_lock(&new_philos->data->print_lock);
 	printf("%ld %zu is thinking\n", get_time_in_ms() - \
 		new_philos->data->start_time, new_philos->f_id);
 	pthread_mutex_unlock(&new_philos->data->print_lock);
-	difference = (new_philos->data->time_to_die -  \
+	difference = (new_philos->data->time_to_die - \
 		(2 * new_philos->data->time_to_eat) - new_philos->data->time_to_sleep);
 	if (difference > 0)
 		ft_sleep(difference, new_philos);

@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:26:08 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/09 16:04:18 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/09 21:05:01 by ale           ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	monitoring_function(t_philo *new_philos)
 	{
 		i = -1;
 		total_satisfaction = 0;
-		while(++i < new_philos->data->n_filos)
+		while (++i < new_philos->data->n_filos)
 		{
 			pthread_mutex_lock(&new_philos[i].meal_lock);
 			if (get_time_in_ms() - new_philos[i].last_meal >= \
@@ -99,12 +99,12 @@ void	monitoring_function(t_philo *new_philos)
 			return (set_satisfaction_reached(new_philos));
 		ft_sleep(200, new_philos);
 	}
-	return;
+	return ;
 }
 
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
-	t_program 			p_data;
+	t_program			p_data;
 	t_philo				*philosophers;
 	t_fork				*forks;
 
