@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   main.c                                             :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/09 11:26:08 by asemerar      #+#    #+#                 */
+/*   Updated: 2024/07/09 12:59:22 by asemerar      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,10 +22,19 @@
 
 //strace -f -e trace=futex -tt -T -o strace_output ./philo
 
+void	display_as_last(long flag, t_philo *new_philos, long n)
+{
+	if (!flag)
+	{
+		pthread_mutex_lock(&new_philos->data->print_lock);
+		printf("%ld %zu died\n", get_time_in_ms() - \
+			new_philos[n].data->start_time, new_philos[n].f_id);
+		pthread_mutex_unlock(&new_philos->data->print_lock);
+	}
+}
+
 void	display_and_set_death(t_philo *new_philos, long i)
 {
-	//pthread_mutex_lock(&new_philos->data->print_lock);
-	//pthread_mutex_unlock(&new_philos->data->print_lock);
 	long	n;
 	int		flag;
 	long	start_time;
@@ -35,15 +57,8 @@ void	display_and_set_death(t_philo *new_philos, long i)
 		new_philos[i].is_dead = true;
 		pthread_mutex_unlock(&new_philos[i].death_lock);
 	}
-	usleep(400);
-	if (!flag)
-	{
-		pthread_mutex_lock(&new_philos->data->print_lock);
-		printf("%ld %zu died\n", get_time_in_ms() - new_philos[n].data->start_time, new_philos[n].f_id);
-		pthread_mutex_unlock(&new_philos->data->print_lock);
-	}
-	//new_philos[i].someone_died = true;
-	//pthread_mutex_unlock(&new_philos[i].meal_lock);
+	ft_sleep(400, new_philos);
+	display_as_last(flag, new_philos, n);
 }
 
 void	set_satisfaction_reached(t_philo *new_philos)
@@ -61,40 +76,29 @@ void	set_satisfaction_reached(t_philo *new_philos)
 
 void monitoring_function(t_philo *new_philos)
 {
-	//t_philo *new_philos;
 	long	i;
 	long	total_satisfaction;
 
-	///new_philos = (t_philo *)(philos);
-	//ft_sleep(1, new_philos);
-	// while(!new_philos->data->synchronized)
-	// 	continue;
-	// pthread_mutex_lock(&new_philos->data->start_monitoring);
-	// pthread_mutex_unlock(&new_philos->data->start_monitoring);
-	pthread_mutex_lock(&new_philos->data->start_lock);
-	pthread_mutex_unlock(&new_philos->data->start_lock);
 	while(1)
 	{
-		i = 0;
+		i = -1;
 		total_satisfaction = 0;
-		while(i < new_philos->data->n_filos)
+		while(++i < new_philos->data->n_filos)
 		{
 			pthread_mutex_lock(&new_philos[i].meal_lock);
-			//printf("philo last meal %ld\n", new_philos[i].last_meal);
-			if (get_time_in_ms() - new_philos[i].last_meal >= new_philos[i].data->time_to_die)
+			if (get_time_in_ms() - new_philos[i].last_meal >= \
+				new_philos[i].data->time_to_die)
 			{
 				pthread_mutex_unlock(&new_philos[i].meal_lock);
-				//printf("INFO %ld\n", new_philos[i].last_meal);
 				return (display_and_set_death(new_philos, i));
 			}
 			if (new_philos[i].satisfied)
 				total_satisfaction++;
 			pthread_mutex_unlock(&new_philos[i].meal_lock);
-			i++;
 		}
 		if (total_satisfaction == new_philos->data->n_filos)
 			return (set_satisfaction_reached(new_philos));
-		usleep(200);
+		ft_sleep(200, new_philos);
 	}
 	return;
 }
@@ -104,8 +108,6 @@ int main(int argc, char **argv)
 	t_program 			p_data;
 	t_philo				*philosophers;
 	t_fork				*forks;
-	pthread_t			monitor;
-	long				i;
 
 	if (!correct_arguments(argc, argv))
 		return (1);
@@ -120,8 +122,11 @@ int main(int argc, char **argv)
 	if (!init_forks_and_philos(philosophers, forks, &p_data))
 		return (1);
 	if (!create_philos_threads(philosophers))
-		return (destroy_free_and_error(philosophers, forks, 4, p_data.n_filos), 1);
+	{
+		destroy_free_and_err(philosophers, forks, 4, p_data.n_filos);
+		return (1);
+	}
 	monitoring_function(philosophers);
 	join_philos_threads(philosophers);
-	return (destroy_free_and_error(philosophers, forks, 4, p_data.n_filos), 0);
+	return (destroy_free_and_err(philosophers, forks, 5, p_data.n_filos), 0);
 }

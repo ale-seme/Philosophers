@@ -1,12 +1,13 @@
 NAME = philo
 
-CFLAGS = -g
+CFLAGS = -g -Wall -Wextra -Werror
+
 
 LINKS = 
 INCLUDES = -I./include
 
 SRC = main.c initialization.c philo_threads.c utils.c philo_actions.c \
-		free_functions.c argument_check.c
+		free_and_errors.c argument_check.c
 
 
 DIR_SRC = src
@@ -32,5 +33,7 @@ fclean: clean
 	rm -f ${NAME}
 
 re: fclean all
+
+valgrind:
 
 .PHONY: all clean re

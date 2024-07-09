@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   argument_check.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/09 11:26:18 by asemerar      #+#    #+#                 */
+/*   Updated: 2024/07/09 11:49:49 by asemerar      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,31 +28,18 @@ int correct_arguments(int argc, char **argv)
 
     i = 0;
     if (argc < 5 || argc > 6)
-    {
-        printf("incorrect number of arguments\n");
-        return (0);
-    }
+        return(printf(ERR_N_ARGS), 0);
     while(argv[++i])
     {
         x = 0;
         if (!argv[i][x])
-        {
-            printf("The simulation doesn't accept empty arguments\n");
-            return (0);
-        }
+            return(printf(ERR_EMPTY_ARGS), 0);
         else if (argv[i][x] == '0')
-        {
-            printf("the simulation doesnt accept an argument starting with 0\n");
-            return (0);
-        }
+            return(printf(ERR_0_IN_ARG), 0);
         while(argv[i][x])
         {
-            
             if (!(argv[i][x] >= '0' && argv[i][x++] <= '9'))
-            {
-                printf("The simulation accepts only unsigned numbers\n");
-                return (0);
-            }
+                return(printf(ERR_ONLY_UNUMBERS), 0);
         }
     }
     return (1);
@@ -58,7 +57,7 @@ long    simple_atoi(char *argv)
         
         if (number > (LONG_MAX - (argv[i] - '0')) / 10)
         {
-            printf("The simulation accepts numbers till LONG_MAX\n");
+            printf(ERR_LONG_OVERFLOW);
             return (0);
         }
         number = number *10 + (argv[i] - '0');

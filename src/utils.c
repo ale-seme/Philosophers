@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   utils.c                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/09 11:25:56 by asemerar      #+#    #+#                 */
+/*   Updated: 2024/07/09 12:15:53 by asemerar      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,18 +20,6 @@
 #include <sys/time.h>
 #include "Philo.h"
 
-void	display_error(char *error)
-{
-	int	i;
-
-	i = 0;
-	if (error)
-	{
-		while(error[i])
-			i++;
-		write(2, error, i);
-	}
-}
 
 long int	get_time_in_ms()
 {
@@ -51,11 +52,6 @@ int	death_check(t_philo *self_philo)
 		pthread_mutex_unlock(&self_philo->death_lock);
 		return (1);
 	}
-	// if (self_philo->someone_died)//here to focus
-	// {
-	// 	pthread_mutex_unlock(&self_philo->death_lock);
-	// 	return (1);
-	// }
 	pthread_mutex_unlock(&self_philo->death_lock);
 	return (0);
 }

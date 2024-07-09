@@ -1,3 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   philo_threads.c                                    :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/09 11:25:50 by asemerar      #+#    #+#                 */
+/*   Updated: 2024/07/09 12:09:39 by asemerar      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,12 +28,8 @@ void *routine(void *philos)
 	pthread_mutex_lock(&self_philo->data->start_lock);
 	pthread_mutex_unlock(&self_philo->data->start_lock);
 	pthread_mutex_lock(&self_philo->meal_lock);
-	self_philo->last_meal = get_time_in_ms(); //should I use a lock then every time I deal with meals?
+	self_philo->last_meal = get_time_in_ms();
 	pthread_mutex_unlock(&self_philo->meal_lock);
-	// while(!new_philos->data->synchronized)
-	// 	continue;
-	// if (self_philo->data->n_filos % 2 == 0 && self_philo->f_id == self_philo->data->n_filos)
-	// 	ft_sleep(1, self_philo);
 	if (self_philo->f_id % 2 == 0)
 	{
 		ft_sleep(self_philo->data->time_to_eat /2, self_philo);
@@ -66,7 +75,6 @@ int	create_philos_threads(t_philo *philosophers)
 	philosophers->data->start_time = get_time_in_ms();
 	pthread_mutex_unlock(&philosophers->data->start_lock);
 	return (1);
-	//usleep(1000);
 }
 
 void    join_philos_threads(t_philo *philosophers)

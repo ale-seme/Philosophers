@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   free_functions.c                                   :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2024/07/09 11:25:23 by asemerar      #+#    #+#                 */
+/*   Updated: 2024/07/09 12:16:22 by asemerar      ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,8 +19,18 @@
 #include <sys/time.h>
 #include "Philo.h"
 
+void	display_error(char *error)
+{
+	int	i;
 
-
+	i = 0;
+	if (error)
+	{
+		while(error[i])
+			i++;
+		write(2, error, i);
+	}
+}
 
 void	free_data_and_err(t_program *p_data, const char *error, int stop)
 {
@@ -25,11 +47,12 @@ void	free_data_and_err(t_program *p_data, const char *error, int stop)
 			pthread_mutex_destroy(data_mutexes[i]);
 			i++;
 		}
-		write(2, ERR_MUTEX_D, 29);
+		write(2, error, 29);
 	}
 }
 
-void free_and_error(t_program *p_data, t_philo *philos, t_fork *forks, char *err)
+void free_and_error(t_program *p_data, t_philo *philos, t_fork *forks, \
+	 char *err)
 {
 	if (p_data)
 	{
@@ -47,7 +70,7 @@ void free_and_error(t_program *p_data, t_philo *philos, t_fork *forks, char *err
 	display_error(err);
 }
 
-void destroy_free_and_error(t_philo *philos, t_fork *forks, long n, long stop)
+void destroy_free_and_err(t_philo *philos, t_fork *forks, long n, long stop)
 {
 	long	i;
 	char	*err;
