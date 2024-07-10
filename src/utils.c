@@ -6,10 +6,9 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:56 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/09 12:15:53 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/10 20:12:02 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include <unistd.h>
 #include <stdio.h>
@@ -20,13 +19,12 @@
 #include <sys/time.h>
 #include "Philo.h"
 
-
-long int	get_time_in_ms()
+long int	get_time_in_ms(void)
 {
-	struct	timeval tv;
-	
+	struct timeval	tv;
+
 	gettimeofday(&tv, NULL);
-	return(tv.tv_sec * 1000 + tv.tv_usec / 1000);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
 }
 
 void	ft_sleep(long int sleep_time_in_ms, t_philo *new_philos)
@@ -36,14 +34,15 @@ void	ft_sleep(long int sleep_time_in_ms, t_philo *new_philos)
 
 	start_time = get_time_in_ms();
 	time_passed = 0;
-	while(time_passed < sleep_time_in_ms)
+	while (time_passed < sleep_time_in_ms)
 	{
 		usleep(200);
 		time_passed = get_time_in_ms() - start_time;
 		if (death_check(new_philos))
-			break;
+			break ;
 	}
 }
+
 int	death_check(t_philo *self_philo)
 {
 	pthread_mutex_lock(&self_philo->death_lock);
@@ -55,5 +54,3 @@ int	death_check(t_philo *self_philo)
 	pthread_mutex_unlock(&self_philo->death_lock);
 	return (0);
 }
-
-

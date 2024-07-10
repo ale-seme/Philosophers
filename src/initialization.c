@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/09 12:36:39 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/10 19:57:48 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,29 +43,30 @@ int	initialize_data(t_program *p_data, int argc, char **argv)
 }
 
 void	populate_everything(t_philo *philos, t_fork *forks, t_program *p_data, \
-		 long i)
+		long i)
 {
-		philos[i].f_id = i + 1;
-		philos[i].data = p_data;
-		philos[i].fork_left = &forks[i];
-		philos[i].last_meal = get_time_in_ms();
-		philos[i].meals_eaten = 0;
-		philos[i].is_dead = false;
-		philos[i].someone_died = false;
-		philos[i].satisfied = false;
-		if (p_data->n_filos == 1)
-			philos[i].fork_right = &forks[i];
-		else if (i == 0)
-			philos[i].fork_right = &forks[p_data->n_filos - 1];
-		else
-			philos[i].fork_right = &forks[i - 1];
+	philos[i].f_id = i + 1;
+	philos[i].data = p_data;
+	philos[i].fork_left = &forks[i];
+	philos[i].last_meal = get_time_in_ms();
+	philos[i].meals_eaten = 0;
+	philos[i].is_dead = false;
+	philos[i].someone_died = false;
+	philos[i].satisfied = false;
+	if (p_data->n_filos == 1)
+		philos[i].fork_right = &forks[i];
+	else if (i == 0)
+		philos[i].fork_right = &forks[p_data->n_filos - 1];
+	else
+		philos[i].fork_right = &forks[i - 1];
 }
+
 int	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 {
 	long	i;
-	
+
 	i = -1;
-	while(++i < p_data->n_filos)
+	while (++i < p_data->n_filos)
 	{
 		populate_everything(philos, forks, p_data, i);
 		if (pthread_mutex_init(&philos[i].meal_lock, NULL) == -1)
@@ -77,4 +78,3 @@ int	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 	}
 	return (1);
 }
-
