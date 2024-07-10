@@ -6,10 +6,9 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:26:27 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/09 12:06:39 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/10 20:31:41 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include <unistd.h>
 #include <stdio.h>
@@ -36,39 +35,38 @@
 
 typedef struct s_program
 {
-	long			n_filos;
-	long			time_to_die;
-	long			time_to_eat;
-	long			time_to_sleep;
-	long			meals_needed;
-	long			start_time;
-	bool			synchronized;
-	pthread_mutex_t	print_lock;
-	pthread_mutex_t	start_lock;
+	long				n_filos;
+	long				time_to_die;
+	long				time_to_eat;
+	long				time_to_sleep;
+	long				meals_needed;
+	long				start_time;
+	bool				synchronized;
+	pthread_mutex_t		print_lock;
+	pthread_mutex_t		start_lock;
 	struct s_philo		*all_philos;
 	struct s_fork		*all_forks;
 }	t_program;
 
 typedef struct s_fork
 {
-	pthread_mutex_t lock;
+	pthread_mutex_t	lock;
 }	t_fork;
 
 typedef struct s_philo
 {
-	
 	size_t			f_id;
 	struct timeval	tv;
 	long			last_meal;
 	pthread_t		thread;
 	t_fork			*fork_right;
 	t_fork			*fork_left;
-	t_program*		data;
+	t_program		*data;
 	bool			satisfied;
 	bool			is_dead;
 	bool			someone_died;
 	long			meals_eaten;
-	pthread_mutex_t meal_lock;
+	pthread_mutex_t	meal_lock;
 	pthread_mutex_t	death_lock;
 }	t_philo;
 
@@ -79,7 +77,8 @@ long	simple_atoi(char *argv);
 /*Data initialization*/
 
 int		initialize_data(t_program *p_data, int argc, char **argv);
-int		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program * p_data);
+int		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program\
+*p_data);
 
 /*Create and join threads*/
 
@@ -88,7 +87,7 @@ void	join_philos_threads(t_philo *philosophers);
 
 /*Monitoring and time management*/
 void	*routine(void *philos);
-long	get_time_in_ms();
+long	get_time_in_ms(void);
 void	ft_sleep(long int sleep_time_in_ms, t_philo *new_philos);
 int		death_check(t_philo *self_philo);
 
