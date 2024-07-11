@@ -34,6 +34,4 @@ fclean: clean
 
 re: fclean all
 
-valgrind:
-
 .PHONY: all clean re

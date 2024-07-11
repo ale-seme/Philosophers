@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:26:27 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/10 20:31:41 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 11:10:50 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,8 @@ long	simple_atoi(char *argv);
 /*Data initialization*/
 
 int		initialize_data(t_program *p_data, int argc, char **argv);
-int		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program\
-*p_data);
+int		init_forks_and_philos(t_philo *philos, t_fork *forks, t_program \
+		*p_data);
 
 /*Create and join threads*/
 
@@ -101,7 +101,8 @@ int		action_thinking(t_philo *new_philos);
 /*cleaning functions*/
 
 void	free_data_and_err(t_program *p_data, const char *error, int index);
-void	free_and_error(t_program *p_data, t_philo *philos, t_fork *forks, char *err);
+void	free_and_error(t_program *p_data, t_philo *philos, t_fork *forks, \
+		char *err);
 void	display_error(char *error);
 void	destroy_free_and_err(t_philo *philos, t_fork *forks, long n, long stop);
 void	detach_and_error(t_philo *philosophers, long stop, char *err);

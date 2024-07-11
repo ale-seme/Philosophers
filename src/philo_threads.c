@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:50 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/10 20:10:20 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 11:40:23 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,17 @@
 #include <sys/time.h>
 #include "Philo.h"
 
+int	even_philos_synch(t_philo *self_philo)
+{
+	if (self_philo->f_id % 2 == 0)
+	{
+		ft_sleep(self_philo->data->time_to_eat / 2, self_philo);
+		if (death_check(self_philo))
+			return (0);
+	}
+	return (1);
+}
+
 void	*routine(void *philos)
 {
 	t_philo	*self_philo;
@@ -29,31 +40,19 @@ void	*routine(void *philos)
 	pthread_mutex_lock(&self_philo->meal_lock);
 	self_philo->last_meal = get_time_in_ms();
 	pthread_mutex_unlock(&self_philo->meal_lock);
-	if (self_philo->f_id % 2 == 0)
-	{
-		ft_sleep(self_philo->data->time_to_eat / 2, self_philo);
-		if (death_check(self_philo))
-			return (NULL);
-	}
+	if (!even_philos_synch(self_philo))
+		return (NULL);
 	while (1)
 	{
 		if (death_check(self_philo))
 			break ;
-		if (!grabbing_forks_even(self_philo))
-			break ;
-		if (!grabbing_forks_odd(self_philo))
+		if (!grabbing_forks_even(self_philo) || !grabbing_forks_odd(self_philo))
 			break ;
 		if (death_check(self_philo))
-		{
-			pthread_mutex_unlock(&self_philo->fork_left->lock);
-			pthread_mutex_unlock(&self_philo->fork_right->lock);
-			break ;
-		}
-		if (!action_eating(self_philo))
-			break ;
-		if (!action_sleeping(self_philo))
-			break ;
-		if (!action_thinking(self_philo))
+			return (pthread_mutex_unlock(&self_philo->fork_left->lock), \
+			pthread_mutex_unlock(&self_philo->fork_right->lock), NULL);
+		if (!action_eating(self_philo) || !action_sleeping(self_philo) || \
+			!action_thinking(self_philo))
 			break ;
 	}
 	return (NULL);
