@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:26:27 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/11 11:10:50 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 12:04:19 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	size_t			f_id;
+	long			f_id;
 	struct timeval	tv;
 	long			last_meal;
 	pthread_t		thread;
@@ -98,7 +98,7 @@ int		action_eating(t_philo *new_philos);
 int		action_sleeping(t_philo *new_philos);
 int		action_thinking(t_philo *new_philos);
 
-/*cleaning functions*/
+/*cleaning and errors functions*/
 
 void	free_data_and_err(t_program *p_data, const char *error, int index);
 void	free_and_error(t_program *p_data, t_philo *philos, t_fork *forks, \
