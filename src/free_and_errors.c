@@ -6,17 +6,10 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:23 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/10 19:55:41 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 15:24:42 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <time.h>
-#include <sys/time.h>
 #include "Philo.h"
 
 void	display_error(char *error)

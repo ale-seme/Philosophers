@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/10 19:57:48 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 15:23:15 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,10 @@ int	atoi_is_overflow(t_program *p_data)
 		|| p_data->time_to_die == 0 \
 		|| p_data->time_to_eat == 0 || p_data->time_to_sleep == 0 \
 		|| p_data->meals_needed == 0)
+	{
+		display_error(ERR_LONG_OVERFLOW);
 		return (1);
+	}
 	return (0);
 }
 

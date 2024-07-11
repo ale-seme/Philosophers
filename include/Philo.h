@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:26:27 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/11 12:04:19 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 15:25:29 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <pthread.h>
 #include <stdbool.h>
 #include <time.h>
+#include <limits.h>
 #include <sys/time.h>
 
 /*Error messages*/
@@ -89,6 +90,7 @@ void	join_philos_threads(t_philo *philosophers);
 void	*routine(void *philos);
 long	get_time_in_ms(void);
 void	ft_sleep(long int sleep_time_in_ms, t_philo *new_philos);
+void	safe_usleep(long int sleep_time_in_ms);
 int		death_check(t_philo *self_philo);
 
 /*philosophers actions*/

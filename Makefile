@@ -2,8 +2,6 @@ NAME = philo
 
 CFLAGS = -g -Wall -Wextra -Werror
 
-
-LINKS = 
 INCLUDES = -I./include
 
 SRC = main.c initialization.c philo_threads.c utils.c philo_actions.c \
@@ -18,7 +16,7 @@ SRC := ${addprefix ${DIR_SRC}/, ${SRC}}
 OBJ = ${subst ${DIR_SRC}/, ${DIR_OBJ}/, ${SRC:.c=.o}}
 
 ${NAME}: ${OBJ}
-	${CC} ${CFLAGS} $^ ${LINKS} -o $@
+	${CC} ${CFLAGS} $^ -o $@
 
 all: ${NAME}
 

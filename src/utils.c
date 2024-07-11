@@ -6,17 +6,10 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:56 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/11 13:26:27 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 15:25:15 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <time.h>
-#include <sys/time.h>
 #include "Philo.h"
 
 long int	get_time_in_ms(void)
@@ -25,6 +18,20 @@ long int	get_time_in_ms(void)
 
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	safe_usleep(long int sleep_time_in_ms)
+{
+	long int	start_time;
+	long int	time_passed;
+
+	start_time = get_time_in_ms();
+	time_passed = 0;
+	while (time_passed < sleep_time_in_ms)
+	{
+		usleep(500);
+		time_passed = get_time_in_ms() - start_time;
+	}
 }
 
 void	ft_sleep(long int sleep_time_in_ms, t_philo *new_philos)

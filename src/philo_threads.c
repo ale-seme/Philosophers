@@ -6,17 +6,10 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:50 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/11 11:40:23 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 15:25:11 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <time.h>
-#include <sys/time.h>
 #include "Philo.h"
 
 int	even_philos_synch(t_philo *self_philo)

@@ -6,17 +6,10 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:42 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/10 20:07:11 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 15:25:06 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <time.h>
-#include <sys/time.h>
 #include "Philo.h"
 
 int	grabbing_forks_even(t_philo *new_philos)

@@ -6,17 +6,10 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:26:08 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/10 20:03:07 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/11 15:25:01 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdbool.h>
-#include <time.h>
-#include <sys/time.h>
 #include "Philo.h"
 
 //strace -f -e trace=futex -tt -T -o strace_output ./philo
@@ -55,7 +48,7 @@ void	display_and_set_death(t_philo *new_philos, long i)
 		new_philos[i].is_dead = true;
 		pthread_mutex_unlock(&new_philos[i].death_lock);
 	}
-	usleep(400);
+	safe_usleep(2);
 	display_as_last(flag, new_philos, n);
 }
 
