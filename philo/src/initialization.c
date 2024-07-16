@@ -6,7 +6,7 @@
 /*   By: ale <ale@student.codam.nl>                   +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/06/21 00:23:29 by ale           #+#    #+#                 */
-/*   Updated: 2024/07/11 15:23:15 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/16 11:42:18 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,10 @@ int	initialize_data(t_program *p_data, int argc, char **argv)
 		p_data->meals_needed = -1;
 	if (atoi_is_overflow(p_data))
 		return (0);
-	if (pthread_mutex_init(&p_data->print_lock, NULL) == -1)
+	if (pthread_mutex_init(&p_data->print_lock, NULL) != 0)
 		return (free_data_and_err(p_data, ERR_MUTEX_D, 0), 0);
-	if (pthread_mutex_init(&p_data->start_lock, NULL) == -1)
+	if (pthread_mutex_init(&p_data->start_lock, NULL) != 0)
 		return (free_data_and_err(p_data, ERR_MUTEX_D, 1), 0);
-	p_data->synchronized = false;
 	return (1);
 }
 
@@ -72,11 +71,11 @@ int	init_forks_and_philos(t_philo *philos, t_fork *forks, t_program *p_data)
 	while (++i < p_data->n_filos)
 	{
 		populate_everything(philos, forks, p_data, i);
-		if (pthread_mutex_init(&philos[i].meal_lock, NULL) == -1)
+		if (pthread_mutex_init(&philos[i].meal_lock, NULL) != 0)
 			return (destroy_free_and_err(philos, forks, 0, i), 0);
-		if (pthread_mutex_init(&philos[i].death_lock, NULL) == -1)
+		if (pthread_mutex_init(&philos[i].death_lock, NULL) != 0)
 			return (destroy_free_and_err(philos, forks, 1, i), 0);
-		if (pthread_mutex_init(&forks[i].lock, NULL) == -1)
+		if (pthread_mutex_init(&forks[i].lock, NULL) != 0)
 			return (destroy_free_and_err(philos, forks, 2, i), 0);
 	}
 	return (1);

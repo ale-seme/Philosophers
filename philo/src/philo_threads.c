@@ -6,7 +6,7 @@
 /*   By: asemerar <asemerar@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2024/07/09 11:25:50 by asemerar      #+#    #+#                 */
-/*   Updated: 2024/07/11 15:25:11 by asemerar      ########   odam.nl         */
+/*   Updated: 2024/07/16 11:41:44 by asemerar      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	create_philos_threads(t_philo *philosophers)
 	while (++i < philosophers->data->n_filos)
 	{
 		if (pthread_create(&philosophers[i].thread, NULL, &routine, \
-			&philosophers[i]) == -1)
+			&philosophers[i]) != 0)
 			return (detach_and_error(philosophers, i, ERR_THREAD_F), 0);
 	}
 	i = 0;
